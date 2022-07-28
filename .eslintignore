@@ -1,0 +1,4 @@
+# auto generated db orm files
+src/db/
+# built file
+dist/
