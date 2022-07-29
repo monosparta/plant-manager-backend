@@ -25,6 +25,7 @@
             "error",
             "always"
         ],
+        "eqeqeq": "error",
         "no-unused-vars": "warn"
     }
 }
