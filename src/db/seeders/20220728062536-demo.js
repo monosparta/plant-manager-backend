@@ -1,5 +1,5 @@
 "use strict";
-const crypto = require("crypto");
+const bcrypt = require('bcrypt')
 const { faker } = require("@faker-js/faker");
 
 const generateUserData = () => {
@@ -7,7 +7,7 @@ const generateUserData = () => {
   data.ID = faker.datatype.uuid();
   data.Name = faker.name.firstName();
   data.Email = faker.internet.email(data.Name);
-  data.Password = crypto.createHash("sha256").update("demo").digest("hex");
+  data.Password = bcrypt.hashSync("demo",10);
   data.Card = faker.datatype.number({ min: 1000000000, max: 9000000000 });
   data.Phone_Number = faker.phone.number("+8869########");
   return data;
