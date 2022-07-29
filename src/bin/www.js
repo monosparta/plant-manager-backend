@@ -8,7 +8,17 @@ dotenv.config();
 import app from '../app';
 import debugLib from 'debug';
 import http from 'http';
+import cors from 'cors';
 const debug = debugLib('your-project-name:server');
+
+/**
+ * Set Up Cors
+ */
+app.use(
+    cors({
+        origin: '*'
+    })
+);
 
 /**
  * Get port from environment and store in Express.
