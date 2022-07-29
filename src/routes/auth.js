@@ -2,11 +2,57 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import express from 'express';
 const router = express.Router();
+
 import db from '../db/models';
+import verifyToken from '../middlewares/authJWT';
+
+
+const getRentData = async (user) => {
+    const rents = await db.Rent.findAll({ where: { User_ID: user.ID } });
+
+    const rentsResponse = [];
+    for (const rent of rents) {
+        const plant =
+      rent !== null
+          ? await db.Plant.findOne({ where: { ID: rent.Plant_ID } })
+          : null;
+        rentsResponse.push({
+            plant: {
+                id: plant.ID,
+                name: plant.Name,
+                intro: plant.Intro,
+                imgPath: plant.Img_Path,
+                nickName: plant.Nickname,
+                minHumid: plant.Min_Humid,
+            },
+            container: rent.Container_ID,
+        });
+    }
+
+    return rentsResponse;
+};
 
 /* GET users data */
-router.get('/', function (req, res) {
-    res.send('respond with a resource');
+router.get('/', verifyToken, async (req, res) => {
+    if (!req.user) {
+        return res.status(401).send({
+            message: 'Invalid JWT token',
+        });
+    }
+
+    res.status(200)
+        .send({
+            message: 'Query Success',
+            user: {
+                id: req.user.ID,
+                name: req.user.Name,
+                email: req.user.Email,
+                card: req.user.Card,
+                phoneNumber: req.user.Phone_Number
+            },
+            rents: await getRentData(req.user)
+        });
+
 });
 
 /* POST request Login*/
@@ -42,38 +88,18 @@ router.post('/', async (req, res)=>  {
         { expiresIn: '1h' }
     );
 
-    const rents = await db.Rent.findAll({ where: { User_ID: user.ID } });
-
-    const rentsResponse = [];
-    for (const rent of rents) {
-        const plant = (rent !== null) ? await db.Plant.findOne({ where: { ID: rent.Plant_ID } }) : null;
-        rentsResponse.push({
-            plant: {
-                id: plant.ID,
-                name: plant.Name,
-                intro: plant.Intro,
-                imgPath: plant.Img_Path,
-                nickName: plant.Nickname,
-                minHumid: plant.Min_Humid,
-            },
-            container: rent.Container_ID,
-        });
-    }
-    
-
-    res.status(200)
-        .send({
-            message: 'Login success',
-            token,
-            user: {
-                id: user.ID,
-                name: user.Name,
-                email: user.Email,
-                card: user.Card,
-                phoneNumber: user.Phone_Number
-            },
-            rents
-        });
+    res.status(200).send({
+        message: 'Login success',
+        token,
+        user: {
+            id: user.ID,
+            name: user.Name,
+            email: user.Email,
+            card: user.Card,
+            phoneNumber: user.Phone_Number,
+        },
+        rents: await getRentData(user),
+    });
 });
 
 export default router;
