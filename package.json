@@ -4,13 +4,17 @@
   "main": "bin/www",
   "license": "MIT",
   "scripts": {
-    "start": "node -r dotenv/config ./dist/bin/www.js",
+    "start": "node ./dist/bin/www.js",
+    "start:build": "npm-run-all build:clean start",
+    "start:watch": "nodemon --exec yarn start:build",
     "build": "babel ./src -d ./dist",
+    "build:clean": "npm-run-all clean build",
     "migrate:up": "sequelize-cli db:migrate",
     "migrate:undo": "sequelize-cli db:migrate:undo",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "lint:strict": "eslint . --max-warnings 0"
+    "lint:strict": "eslint . --max-warnings 0",
+    "clean": "rimraf dist"
   },
   "dependencies": {
     "@babel/cli": "^7.18.9",
@@ -22,6 +26,8 @@
     "express": "~4.18.1",
     "morgan": "~1.10.0",
     "mysql2": "^2.3.3",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
     "sequelize": "^6.21.3"
   },
   "devDependencies": {
@@ -30,6 +36,7 @@
     "@faker-js/faker": "^7.3.0",
     "eslint": "^8.20.0",
     "express-generator": "^4.16.1",
+    "nodemon": "^2.0.19",
     "sequelize-auto": "^0.8.8",
     "sequelize-cli": "^6.4.1"
   }
