@@ -9,6 +9,8 @@ import app from '../app';
 import debugLib from 'debug';
 import http from 'http';
 const debug = debugLib('your-project-name:server');
+import socket from 'socket.io';
+import mqtt from 'mqtt';
 
 /**
  * Get port from environment and store in Express.
@@ -30,6 +32,30 @@ const server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+/**
+ * Create the socket connection.
+ */
+
+const io = require('socket.io')(server);
+
+/**
+ * Create the MQTT client to connect to the MQTT Broker
+ */
+
+const client = mqtt.connect('mqtt://192.168.168.182:1883', {
+    username: 'van', 
+    password: '123',
+});
+
+
+io.on('connection', function (socket) {
+
+    client.on('message', function (topic, msg) {
+        socket.emit('Plant/Data', JSON.parse(msg));
+    });
+
+});
 
 /**
  * Normalize a port into a number, string, or false.
@@ -60,9 +86,7 @@ function onError(error) {
         throw error;
     }
 
-    const bind = typeof port === 'string'
-        ? 'Pipe ' + port
-        : 'Port ' + port;
+    const bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
     // handle specific listen errors with friendly messages
     switch (error.code) {
@@ -85,9 +109,7 @@ function onError(error) {
 
 function onListening() {
     const addr = server.address();
-    const bind = typeof addr === 'string'
-        ? 'pipe ' + addr
-        : 'port ' + addr.port;
+    const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
     debug('Listening on ' + bind);
     console.log('Server ready!');
 }
