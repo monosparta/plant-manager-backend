@@ -43,18 +43,18 @@ const io = require('socket.io')(server);
  */
 
 const client = mqtt.connect('mqtt://localhost:1883', {
-    username: 'van', 
-    password: '123',
+    username: process.env.MQTT_USERNAME, 
+    password: process.env.MQTT_PASSWORD,
 });
 
 client.on('connect', function () {
     console.log('MQTT CONNECTION START');
-    client.subscribe('Plant/Data');
+    client.subscribe(process.env.MQTT_TPOIC || 'Plant/Data');
 });
   
 io.on('connection', function (socket) {
     client.on('message', function (topic, msg) {
-        socket.emit('Plant/Data', JSON.parse(msg.toString()));
+        socket.emit(process.env.SOCKET_TOPIC || 'Plant/Data', JSON.parse(msg.toString()));
     });
 });
 
