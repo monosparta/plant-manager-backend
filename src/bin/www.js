@@ -49,11 +49,19 @@ const client = mqtt.connect(`mqtt://${mqttHost}:${mqttPort}`, {
     password: process.env.MQTT_PASSWORD,
 });
 
+/**
+ * Subscribe to the topic
+ */
+
 client.on('connect', function () {
     console.log('MQTT CONNECTION START');
     client.subscribe(process.env.MQTT_TPOIC || 'Plant/Data');
 });
   
+/**
+ * Websocket will emit the message when the client get the response from the topic
+ */
+
 io.on('connection', function (socket) {
     client.on('message', function (topic, msg) {
         socket.emit(process.env.SOCKET_TOPIC || 'Plant/Data', JSON.parse(msg.toString()));
