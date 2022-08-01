@@ -6,16 +6,14 @@ const router = express.Router();
 import db from '../db/models';
 import verifyToken from '../middlewares/authJWT';
 
-
+/* Get rent data from user GET users data */
 const getRentData = async (user) => {
     const rents = await db.Rent.findAll({ where: { User_ID: user.ID } });
 
     const rentsResponse = [];
     for (const rent of rents) {
-        const plant =
-      rent !== null
-          ? await db.Plant.findOne({ where: { ID: rent.Plant_ID } })
-          : null;
+        const plant = rent !== null ? await db.Plant.findOne({ where: { ID: rent.Plant_ID } }) : null;
+
         rentsResponse.push({
             plant: {
                 id: plant.ID,
@@ -34,6 +32,7 @@ const getRentData = async (user) => {
 
 /* GET users data */
 router.get('/', verifyToken, async (req, res) => {
+    // token verify fail
     if (!req.user) {
         return res.status(401).send({
             message: 'Invalid JWT token',
@@ -58,35 +57,34 @@ router.get('/', verifyToken, async (req, res) => {
 /* POST request Login*/
 router.post('/', async (req, res)=>  {
     if (req.body.account === undefined || req.body.password === undefined) {
-        return res.status(400)
-            .send({
-                message: 'Invalid body'
-            });
-    } 
+    // body invalid
+        return res.status(400).send({
+            message: 'Invalid body',
+        });
+    }
     const email = req.body.account;
     const password = req.body.password;
 
     const user = await db.User.findOne({ where: { Email: email } });
+    // user not found
     if (user === null) {
-        return res.status(401)
-            .send({
-                message:'Unknown user'
-            });
+        return res.status(401).send({
+            message: 'Unknown user',
+        });
     }
 
+    // check password
     const isValid = await bcrypt.compare(password, user.Password);
     if (!isValid) {
-        return res.status(401)
-            .send({
-                message: 'Invalid Password!'
-            });
+        return res.status(401).send({
+            message: 'Invalid Password!',
+        });
     }
 
-    const token = jwt.sign(
-        { id: user.ID },
-        process.env.API_SECRECT,
-        { expiresIn: '1h' }
-    );
+    // generate token
+    const token = jwt.sign({ id: user.ID }, process.env.API_SECRECT, {
+        expiresIn: '1h',
+    });
 
     res.status(200).send({
         message: 'Login success',
