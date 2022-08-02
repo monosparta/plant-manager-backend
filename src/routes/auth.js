@@ -69,7 +69,7 @@ router.post('/', async (req, res)=>  {
     // user not found
     if (user === null) {
         return res.status(401).send({
-            message: 'Unknown user',
+            message: 'Invalid user or password!',
         });
     }
 
@@ -77,7 +77,7 @@ router.post('/', async (req, res)=>  {
     const isValid = await bcrypt.compare(password, user.Password);
     if (!isValid) {
         return res.status(401).send({
-            message: 'Invalid Password!',
+            message: 'Invalid  user or Password!',
         });
     }
 
