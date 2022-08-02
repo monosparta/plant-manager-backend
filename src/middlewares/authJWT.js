@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import db from '../db/models';
 
 const verifyToken = (req, res, next) => {
     if (
@@ -14,21 +13,22 @@ const verifyToken = (req, res, next) => {
             async (err, decode) => {
                 // token invalid
                 if (err) {
-                    req.user = undefined;
-                    next();
-                    return;
+                    return res.status(401).json({
+                        message: 'Invalid JWT token',
+                    });
                 }
 
                 // return user
-                const user = await db.User.findOne({ where: { ID: decode.id } });
-                req.user = user;
+                req.user = decode.id;
                 next();
             }
         );
     } else { 
         // header invalid
-        req.user = undefined;
-        next();
+        return res.status(400).json({
+            message: 'Invalid header',
+        });
     }
 };
-export default verifyToken;
+
+export { verifyToken };
