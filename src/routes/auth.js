@@ -34,13 +34,13 @@ const getRentData = async (user) => {
 router.get('/', verifyToken, async (req, res) => {
     // token verify fail
     if (!req.user) {
-        return res.status(401).send({
+        return res.status(401).json({
             message: 'Invalid JWT token',
         });
     }
 
     res.status(200)
-        .send({
+        .json({
             message: 'Query Success',
             user: {
                 id: req.user.ID,
@@ -58,7 +58,7 @@ router.get('/', verifyToken, async (req, res) => {
 router.post('/', async (req, res)=>  {
     if (req.body.account === undefined || req.body.password === undefined) {
     // body invalid
-        return res.status(400).send({
+        return res.status(400).json({
             message: 'Invalid body',
         });
     }
@@ -68,7 +68,7 @@ router.post('/', async (req, res)=>  {
     const user = await db.User.findOne({ where: { Email: email } });
     // user not found
     if (user === null) {
-        return res.status(401).send({
+        return res.status(401).json({
             message: 'Invalid user or password!',
         });
     }
@@ -76,7 +76,7 @@ router.post('/', async (req, res)=>  {
     // check password
     const isValid = await bcrypt.compare(password, user.Password);
     if (!isValid) {
-        return res.status(401).send({
+        return res.status(401).json({
             message: 'Invalid  user or Password!',
         });
     }
@@ -86,7 +86,7 @@ router.post('/', async (req, res)=>  {
         expiresIn: '1h',
     });
 
-    res.status(200).send({
+    res.status(200).json({
         message: 'Login success',
         token,
         user: {
