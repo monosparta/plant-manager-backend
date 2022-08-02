@@ -55,7 +55,7 @@ const client = mqtt.connect(`mqtt://${mqttHost}:${mqttPort}`, {
 
 client.on('connect', function () {
     console.log('MQTT CONNECTION START');
-    client.subscribe(process.env.MQTT_TPOIC || 'Plant/Data');
+    client.subscribe(process.env.MQTT_TOPIC || 'Plant/Data');
 });
   
 /**
