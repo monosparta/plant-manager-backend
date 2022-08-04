@@ -15,7 +15,7 @@ const getUser = async (req, res) => {
             isDefaultPassword: user.Is_Default_Password,
             role: user.Role
         },
-        rents: await getRentData(user.ID),
+        rents: await getRentData(user.ID)
     });
 };
 

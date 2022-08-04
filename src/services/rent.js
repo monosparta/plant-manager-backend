@@ -25,6 +25,7 @@ const getRentData = async (userId) => {
     return rentsResponse;
 };
 
+// eslint-disable-next-line camelcase
 const getUserRents = userId => db.Rent.findAll({ where: { User_ID: userId } });
 
 export { getRentData, getUserRents };

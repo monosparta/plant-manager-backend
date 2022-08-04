@@ -7,7 +7,7 @@ module.exports = {
         database: process.env.DEV_DB_NAME || 'plant_manager',
         host: process.env.DEV_DB_HOSTNAME || '127.0.0.1',
         port: process.env.DEV_DB_PORT || 3306,
-        dialect: 'mysql',
+        dialect: 'mysql'
     },
     test: {
         username: process.env.CI_DB_USERNAME,
@@ -15,7 +15,7 @@ module.exports = {
         database: process.env.CI_DB_NAME || 'plant_manager',
         host: process.env.CI_DB_HOSTNAME || '127.0.0.1',
         port: process.env.CI_DB_PORT || 3306,
-        dialect: 'mysql',
+        dialect: 'mysql'
     },
     production: {
         username: process.env.PROD_DB_USERNAME,
@@ -23,6 +23,6 @@ module.exports = {
         database: process.env.PROD_DB_NAME || 'plant_manager',
         host: process.env.PROD_DB_HOSTNAME,
         port: process.env.PROD_DB_PORT,
-        dialect: 'mysql',
-    },
+        dialect: 'mysql'
+    }
 };

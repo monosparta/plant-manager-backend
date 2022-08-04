@@ -7,7 +7,7 @@ const login = async (req, res) => {
     if (req.body.account === undefined || req.body.password === undefined) {
         // body invalid
         return res.status(400).json({
-            message: 'Invalid body',
+            message: 'Invalid body'
         });
     }
     const email = req.body.account;
@@ -17,7 +17,7 @@ const login = async (req, res) => {
     // user not found
     if (user === null) {
         return res.status(401).json({
-            message: 'Invalid user or password!',
+            message: 'Invalid user or password!'
         });
     }
 
@@ -25,13 +25,13 @@ const login = async (req, res) => {
     const isValid = await bcrypt.compare(password, user.Password);
     if (!isValid) {
         return res.status(401).json({
-            message: 'Invalid  user or Password!',
+            message: 'Invalid  user or Password!'
         });
     }
 
     // generate token
     const token = jwt.sign({ id: user.ID }, process.env.API_SECRECT, {
-        expiresIn: '1h',
+        expiresIn: '1h'
     });
 
     res.status(200).json({
@@ -45,7 +45,7 @@ const login = async (req, res) => {
             isDefaultPassword: user.Is_Default_Password,
             role: user.Role
         },
-        rents: await getRentData(user.ID),
+        rents: await getRentData(user.ID)
     });
 };
 

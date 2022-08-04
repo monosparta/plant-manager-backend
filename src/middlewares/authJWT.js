@@ -14,7 +14,7 @@ const verifyToken = (req, res, next) => {
                 // token invalid
                 if (err) {
                     return res.status(401).json({
-                        message: 'Invalid JWT token',
+                        message: 'Invalid JWT token'
                     });
                 }
 
@@ -23,10 +23,10 @@ const verifyToken = (req, res, next) => {
                 next();
             }
         );
-    } else { 
+    } else {
         // header invalid
         return res.status(400).json({
-            message: 'Invalid header',
+            message: 'Invalid header'
         });
     }
 };
