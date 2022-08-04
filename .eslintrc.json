@@ -39,6 +39,7 @@
         "space-before-function-paren": "error",
         "space-in-parens": "error",
         "space-before-blocks": "error",
-        "comma-dangle": "error"
+        "comma-dangle": "error",
+        "no-duplicate-imports": "error"
     }
 }
