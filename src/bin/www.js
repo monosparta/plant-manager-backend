@@ -9,6 +9,7 @@ import app from '../app';
 import debugLib from 'debug';
 import http from 'http';
 const debug = debugLib('your-project-name:server');
+import mqtt from 'mqtt';
 
 /**
  * Get port from environment and store in Express.
@@ -30,6 +31,42 @@ const server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+/**
+ * Create the socket connection.
+ */
+
+const io = require('socket.io')(server);
+
+/**
+ * Create the MQTT client to connect to the MQTT Broker
+ */
+
+const mqttHost = process.env.MQTT_HOST || 'localhost';
+const mqttPort = process.env.MQTT_PORT || 1883;
+const client = mqtt.connect(`mqtt://${mqttHost}:${mqttPort}`, {
+    username: process.env.MQTT_USERNAME, 
+    password: process.env.MQTT_PASSWORD,
+});
+
+/**
+ * Subscribe to the topic
+ */
+
+client.on('connect', function () {
+    console.log('MQTT CONNECTION START');
+    client.subscribe(process.env.MQTT_TOPIC || 'Plant/Data');
+});
+  
+/**
+ * Websocket will emit the message when the client get the response from the topic
+ */
+
+io.on('connection', function (socket) {
+    client.on('message', function (topic, msg) {
+        socket.emit(process.env.SOCKET_TOPIC || 'Plant/Data', JSON.parse(msg.toString()));
+    });
+});
 
 /**
  * Normalize a port into a number, string, or false.
@@ -60,9 +97,7 @@ function onError(error) {
         throw error;
     }
 
-    const bind = typeof port === 'string'
-        ? 'Pipe ' + port
-        : 'Port ' + port;
+    const bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
     // handle specific listen errors with friendly messages
     switch (error.code) {
@@ -85,9 +120,7 @@ function onError(error) {
 
 function onListening() {
     const addr = server.address();
-    const bind = typeof addr === 'string'
-        ? 'pipe ' + addr
-        : 'port ' + addr.port;
+    const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
     debug('Listening on ' + bind);
     console.log('Server ready!');
 }
