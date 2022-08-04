@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       Plant_ID: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: "Plants",
           key: "ID",
@@ -43,15 +43,27 @@ module.exports = (sequelize, DataTypes) => {
       },
       Container_ID: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: "Containers",
           key: "ID",
         },
       },
-      Rent_Time: {
+      Register_Time: {
         type: DataTypes.DATE,
         allowNull: false,
+      },
+      Rent_Time: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      Get_Time: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      Deadline: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
       },
     },
     {
