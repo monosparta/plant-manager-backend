@@ -2,11 +2,16 @@ import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
+import cors from 'cors';
 
 import indexRouter from './routes/index';
-import usersRouter from './routes/users';
+import authRouter from './routes/auth';
+import userRouter from './routes/user';
 
 const app = express();
+
+// Set Up Cors (with origin full access)
+app.use(cors({ credentials: true, origin: true }));
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -15,6 +20,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/user', userRouter);
 
 export default app;
