@@ -15,7 +15,7 @@ const login = async (req, res) => {
 
     const user = await getUserFromEmail(email);
     // user not found
-    if (user === null) {
+    if (!user) {
         return res.status(401).json({
             message: 'Invalid user or password!'
         });
