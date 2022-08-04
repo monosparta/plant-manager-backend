@@ -9,7 +9,7 @@ const verifyToken = (req, res, next) => {
         // verify token with secrect
         jwt.verify(
             req.headers.auth,
-            process.env.API_SECRECT,
+        process.env.JWT_SECRECT,
             async (err, decode) => {
                 // token invalid
                 if (err) {
