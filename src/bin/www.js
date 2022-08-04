@@ -45,8 +45,8 @@ const io = require('socket.io')(server);
 const mqttHost = process.env.MQTT_HOST || 'localhost';
 const mqttPort = process.env.MQTT_PORT || 1883;
 const client = mqtt.connect(`mqtt://${mqttHost}:${mqttPort}`, {
-    username: process.env.MQTT_USERNAME, 
-    password: process.env.MQTT_PASSWORD,
+    username: process.env.MQTT_USERNAME,
+    password: process.env.MQTT_PASSWORD
 });
 
 /**
@@ -57,14 +57,17 @@ client.on('connect', function () {
     console.log('MQTT CONNECTION START');
     client.subscribe(process.env.MQTT_TOPIC || 'Plant/Data');
 });
-  
+
 /**
  * Websocket will emit the message when the client get the response from the topic
  */
 
 io.on('connection', function (socket) {
     client.on('message', function (topic, msg) {
-        socket.emit(process.env.SOCKET_TOPIC || 'Plant/Data', JSON.parse(msg.toString()));
+        socket.emit(
+            process.env.SOCKET_TOPIC || 'Plant/Data',
+            JSON.parse(msg.toString())
+        );
     });
 });
 
@@ -72,16 +75,16 @@ io.on('connection', function (socket) {
  * Normalize a port into a number, string, or false.
  */
 
-function normalizePort(val) {
+function normalizePort (val) {
     const port = parseInt(val, 10);
 
     if (isNaN(port)) {
-    // named pipe
+        // named pipe
         return val;
     }
 
     if (port >= 0) {
-    // port number
+        // port number
         return port;
     }
 
@@ -92,7 +95,7 @@ function normalizePort(val) {
  * Event listener for HTTP server "error" event.
  */
 
-function onError(error) {
+function onError (error) {
     if (error.syscall !== 'listen') {
         throw error;
     }
@@ -101,16 +104,16 @@ function onError(error) {
 
     // handle specific listen errors with friendly messages
     switch (error.code) {
-    case 'EACCES':
-        console.error(bind + ' requires elevated privileges');
-        process.exit(1);
-        break;
-    case 'EADDRINUSE':
-        console.error(bind + ' is already in use');
-        process.exit(1);
-        break;
-    default:
-        throw error;
+        case 'EACCES':
+            console.error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            console.error(bind + ' is already in use');
+            process.exit(1);
+            break;
+        default:
+            throw error;
     }
 }
 
@@ -118,7 +121,7 @@ function onError(error) {
  * Event listener for HTTP server "listening" event.
  */
 
-function onListening() {
+function onListening () {
     const addr = server.address();
     const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
     debug('Listening on ' + bind);

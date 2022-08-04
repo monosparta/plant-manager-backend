@@ -11,7 +11,10 @@
     "rules": {
         "indent": [
             "error",
-            4
+            4,
+            {
+                "SwitchCase": 1
+            }
         ],
         "linebreak-style": [
             "error",
@@ -26,6 +29,16 @@
             "always"
         ],
         "eqeqeq": "error",
-        "no-unused-vars": "warn"
+        "no-unused-vars": "warn",
+        "no-trailing-spaces": "error",
+        "camelcase": "warn",
+        "no-var": "error",
+        "no-useless-return": "error",
+        "no-else-return": "error",
+        "no-empty": "error",
+        "space-before-function-paren": "error",
+        "space-in-parens": "error",
+        "space-before-blocks": "error",
+        "comma-dangle": "error"
     }
 }
