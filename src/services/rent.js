@@ -10,15 +10,15 @@ const getRentData = async (userId) => {
         const plant = await getPlant(rent.Plant_ID);
 
         rentsResponse.push({
-            plant: {
-                id: plant.ID,
+            id: rent.ID,
+            plant: (plant !== null) ? {
                 name: plant.Name,
                 intro: plant.Intro,
                 imgPath: plant.Img_Path,
                 nickName: plant.Nickname,
-                minHumid: plant.Min_Humid,
-            },
-            container: rent.Container_ID,
+                minHumid: plant.Min_Humid
+            } : null,
+            container: rent.Container_ID
         });
     }
 
