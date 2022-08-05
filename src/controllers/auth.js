@@ -1,7 +1,9 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { getUserFromEmail } from '../services/user';
+import { getUserFromEmail, createUser } from '../services/user';
 import { getRentData } from '../services/rent';
+import { createPassword } from '../services/randomPassword';
+import { queryMember } from '../services/fakeMembership';
 
 const login = async (req, res) => {
     if (req.body.email === undefined || req.body.password === undefined) {
@@ -49,4 +51,40 @@ const login = async (req, res) => {
     });
 };
 
-export { login };
+const register = async (req, res) => {
+    if (req.body.email === undefined) {
+        // body invalid
+        return res.status(400).json({
+            message: 'Invalid body'
+        });
+    }
+    const email = req.body.email;
+
+    // TODO: Query monospace member
+    const member = queryMember(email);
+    if (!member) {
+        return res.status(404).json({
+            message: 'Membership not found'
+        });
+    }
+
+    const password = createPassword(8);
+    const user = await createUser(
+        member.ID,
+        member.name,
+        member.email,
+        password,
+        member.phoneNumber,
+        0
+    );
+
+    // TODO: Send create password email
+    console.log(user.Email);
+    console.log(password);
+
+    return res.status(200).json({
+        message: 'Registration success'
+    });
+};
+
+export { login, register };
