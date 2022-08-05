@@ -8,8 +8,9 @@ const generateUserData = () => {
   data.Name = faker.name.firstName();
   data.Email = faker.internet.email(data.Name);
   data.Password = bcrypt.hashSync("demo",10);
-  data.Card = faker.datatype.number({ min: 1000000000, max: 9000000000 });
   data.Phone_Number = faker.phone.number("+8869########");
+  data.Is_Default_Password = false;
+  data.Role = 0;
   return data;
 };
 
@@ -30,7 +31,10 @@ const generateRentData = (ID, user,container,plant) => {
   data.User_ID = user;
   data.Plant_ID = plant;
   data.Container_ID = container;
-  data.Rent_Time = faker.date.past();
+  data.Register_Time = faker.date.past();
+  data.Rent_Time = faker.date.future(1, data.Register_Time);
+  data.Get_Time = faker.date.future(1, data.Rent_Time);
+  data.Deadline = 7;
   return data;
 };
 
@@ -63,7 +67,7 @@ module.exports = {
     await queryInterface.bulkInsert("Users", users);
 
     let containers = [];
-    for (let x = 1; x <= 10; ++x) {
+    for (let x = 1; x <= 3; ++x) {
       containers.push({ ID: x });
     }
     await queryInterface.bulkInsert("Containers", containers);
@@ -94,6 +98,13 @@ module.exports = {
       );
     }
     queryInterface.bulkInsert("States", states);
+
+    // insert empty container
+    let emptyContainers = [];
+    for (let x = 4; x <= 6; ++x) {
+        emptyContainers.push({ ID: x });
+    }
+    await queryInterface.bulkInsert('Containers', emptyContainers);
   },
 
   async down(queryInterface, Sequelize) {
