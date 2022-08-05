@@ -4,13 +4,13 @@ import { getUserFromEmail } from '../services/user';
 import { getRentData } from '../services/rent';
 
 const login = async (req, res) => {
-    if (req.body.account === undefined || req.body.password === undefined) {
+    if (req.body.email === undefined || req.body.password === undefined) {
         // body invalid
         return res.status(400).json({
             message: 'Invalid body'
         });
     }
-    const email = req.body.account;
+    const email = req.body.email;
     const password = req.body.password;
 
     const user = await getUserFromEmail(email);
