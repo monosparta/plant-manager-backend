@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { getUserFromEmail, createUser } from '../services/user';
+import { getUserFromEmail, createUser, updatePassword } from '../services/user';
 import { getRentData } from '../services/rent';
 import { createPassword } from '../services/randomPassword';
 import { queryMember } from '../services/fakeMembership';
@@ -60,6 +60,13 @@ const register = async (req, res) => {
     }
     const email = req.body.email;
 
+    const existUser = await getUserFromEmail(email);
+    if (existUser) {
+        return res.status(409).json({
+            message: 'User already exist'
+        });
+    }
+
     // TODO: Query monospace member
     const member = queryMember(email);
     if (!member) {
@@ -87,4 +94,18 @@ const register = async (req, res) => {
     });
 };
 
-export { login, register };
+const changePassword = async (req, res) => {
+    if (req.body.password === undefined) {
+        // body invalid
+        return res.status(400).json({
+            message: 'Invalid body'
+        });
+    }
+    await updatePassword(req.user, req.body.password);
+
+    return res.status(200).json({
+        message: 'Password updated'
+    });
+};
+
+export { login, register, changePassword as updatePassword };

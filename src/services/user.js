@@ -16,4 +16,13 @@ const createUser = (ID, userName, email, password, phoneNumber, role) => db.User
     Role: role
 });
 
-export { getUserFromEmail, getUserFromID, createUser };
+const updatePassword = (ID, password, isDefault = false) =>
+    db.User.update(
+        {
+            Password: bcrypt.hashSync(password, 10),
+            Is_Default_Password: isDefault
+        },
+        { where: { ID } }
+    );
+
+export { getUserFromEmail, getUserFromID, createUser, updatePassword };
