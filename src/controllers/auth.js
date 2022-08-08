@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { getUserFromEmail, createUser, updatePassword } from '../services/user';
-import { getRentData } from '../services/rent';
+import { getUserRentData } from '../services/rent';
 import { createPassword } from '../services/randomPassword';
 import { queryMember } from '../services/fakeMembership';
 
@@ -47,7 +47,7 @@ const login = async (req, res) => {
             isDefaultPassword: user.Is_Default_Password,
             role: user.Role
         },
-        rents: await getRentData(user.ID)
+        rents: await getUserRentData(user.ID)
     });
 };
 
