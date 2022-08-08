@@ -1,5 +1,5 @@
-import { getOtherUserRentData, newRent } from '../services/rent';
-
+import { getEmptyContainers } from '../services/container';
+import { assignContainer, getOtherUserRentData, insertRent } from '../services/rent';
 
 const listOtherRents = async (req, res) => {
     res.status(200).json({
@@ -9,7 +9,14 @@ const listOtherRents = async (req, res) => {
 };
 
 const registerRent = async (req, res) => {
-    await newRent(req.user);
+    const rent = await insertRent(req.user);
+
+    // TODO: Auto assign container when avaliable
+    const emptyContainers = await getEmptyContainers();
+    if (emptyContainers.length !== 0) {
+        await assignContainer(rent.ID, emptyContainers[0].id);
+        // TODO: Send fill from email
+    }
 
     res.status(200).json({
         message: 'Registration successful'
