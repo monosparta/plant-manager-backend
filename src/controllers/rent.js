@@ -1,6 +1,6 @@
 import { getEmptyContainers } from '../services/container';
 import { createPlant } from '../services/plant';
-import { assignContainer, assignPlant, getOtherUserRentData, insertRent } from '../services/rent';
+import { assignContainer, assignPlant, getOtherUserRentData, getRentById, insertRent } from '../services/rent';
 import { join } from 'path';
 import { unlinkSync } from 'fs';
 
@@ -40,7 +40,22 @@ const updatePlantInfo = async (req, res) => {
         // delete file because of failure
         unlinkSync(req.file.path);
         return res.status(400).json({
-            'message': 'Invalid body'
+            message: 'Invalid body'
+        });
+    }
+    const rent = await getRentById(parseInt(req.body.rent));
+    if (rent === null || rent.Container_ID === null) {
+        unlinkSync(req.file.path);
+        return res.status(404).json({
+            message: 'Requested rent not found'
+        });
+    }
+
+    // TODO: To be discussed
+    if (rent.Plant_ID !== null) {
+        unlinkSync(req.file.path);
+        return res.status(409).json({
+            message: 'Plant already exist'
         });
     }
 

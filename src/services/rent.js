@@ -37,6 +37,7 @@ const getRentData = async rents => {
     return rentsData;
 };
 
+const getRentById = ID => db.Rent.findOne({ where: { ID } });
 
 const getUserRents = userId => db.Rent.findAll({ where: { User_ID: userId } });
 
@@ -69,5 +70,6 @@ export {
     getOtherUserRentData,
     insertRent,
     assignContainer,
-    assignPlant
+    assignPlant,
+    getRentById
 };
