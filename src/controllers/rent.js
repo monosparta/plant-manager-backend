@@ -1,4 +1,4 @@
-import { getOtherUserRentData } from '../services/rent';
+import { getOtherUserRentData, newRent } from '../services/rent';
 
 
 const listOtherRents = async (req, res) => {
@@ -8,8 +8,12 @@ const listOtherRents = async (req, res) => {
     });
 };
 
-const registerRent = (req, res) => {
+const registerRent = async (req, res) => {
+    await newRent(req.user);
 
+    res.status(200).json({
+        message: 'Registration successful'
+    });
 };
 
 const updatePlantInfo = (req, res) => {
