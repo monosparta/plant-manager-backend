@@ -62,3 +62,6 @@ typings/
 
 # es6 output
 dist/
+
+# fake data 
+fakeMemberShip.json
