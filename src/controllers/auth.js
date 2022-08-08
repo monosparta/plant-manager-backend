@@ -94,6 +94,35 @@ const register = async (req, res) => {
     });
 };
 
+
+const requestChangePassword = async (req, res) => {
+    if (req.body.email === undefined) {
+        // body invalid
+        return res.status(400).json({
+            message: 'Invalid body'
+        });
+    }
+    const email = req.body.email;
+
+    const user = await getUserFromEmail(email);
+    if (!user) {
+        return res.status(404).json({
+            message: 'User not found'
+        });
+    }
+
+    const password = createPassword(8);
+    await updatePassword(user.ID, password, true);
+
+    // TODO: Send create password email
+    console.log(user.Email);
+    console.log(password);
+
+    return res.status(200).json({
+        message: 'Request success'
+    });
+};
+
 const changePassword = async (req, res) => {
     if (req.body.password === undefined) {
         // body invalid
@@ -108,4 +137,9 @@ const changePassword = async (req, res) => {
     });
 };
 
-export { login, register, changePassword as updatePassword };
+export {
+    login,
+    register,
+    changePassword as updatePassword,
+    requestChangePassword
+};
