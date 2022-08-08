@@ -65,3 +65,6 @@ dist/
 
 # fake data 
 fakeMemberShip.json
+
+# uploaded images
+public/uploads/

@@ -1,5 +1,8 @@
 import { getEmptyContainers } from '../services/container';
-import { assignContainer, getOtherUserRentData, insertRent } from '../services/rent';
+import { createPlant } from '../services/plant';
+import { assignContainer, assignPlant, getOtherUserRentData, insertRent } from '../services/rent';
+import { join } from 'path';
+import { unlinkSync } from 'fs';
 
 const listOtherRents = async (req, res) => {
     res.status(200).json({
@@ -23,8 +26,36 @@ const registerRent = async (req, res) => {
     });
 };
 
-const updatePlantInfo = (req, res) => {
+const updatePlantInfo = async (req, res) => {
+    console.log(req.file);
+    console.log(req.body);
+    if (
+        req.file === undefined ||
+        req.body.rent === undefined ||
+        req.body.name === undefined ||
+        req.body.intro === undefined ||
+        req.body.nickName === undefined ||
+        req.body.minHumid === undefined
+    ) {
+        // delete file because of failure
+        unlinkSync(req.file.path);
+        return res.status(400).json({
+            'message': 'Invalid body'
+        });
+    }
 
+    const plant = await createPlant(
+        req.body.name,
+        req.body.intro,
+        join('uploads/', req.file.filename),
+        req.body.nickName,
+        parseInt(req.body.minHumid)
+    );
+
+    await assignPlant(parseInt(req.body.rent), plant.ID);
+    res.status(200).json({
+        message: 'Update successful'
+    });
 };
 
 export { listOtherRents, registerRent, updatePlantInfo };

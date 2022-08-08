@@ -58,11 +58,16 @@ const assignContainer = (ID, containerId, deadline = 5) =>
         Deadline: deadline
     }, { where: { ID } });
 
+const assignPlant = (ID, plantId) =>
+    db.Rent.update({
+        Plant_ID: plantId
+    }, { where: { ID } });
 
 export {
     getUserRentData,
     getUserRents,
     getOtherUserRentData,
     insertRent,
-    assignContainer
+    assignContainer,
+    assignPlant
 };
