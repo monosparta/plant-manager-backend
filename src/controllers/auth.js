@@ -1,16 +1,18 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { getUserFromEmail } from '../services/user';
+import { getUserFromEmail, createUser, updatePassword } from '../services/user';
 import { getRentData } from '../services/rent';
+import { createPassword } from '../services/randomPassword';
+import { queryMember } from '../services/fakeMembership';
 
 const login = async (req, res) => {
-    if (req.body.account === undefined || req.body.password === undefined) {
+    if (req.body.email === undefined || req.body.password === undefined) {
         // body invalid
         return res.status(400).json({
             message: 'Invalid body'
         });
     }
-    const email = req.body.account;
+    const email = req.body.email;
     const password = req.body.password;
 
     const user = await getUserFromEmail(email);
@@ -49,4 +51,95 @@ const login = async (req, res) => {
     });
 };
 
-export { login };
+const register = async (req, res) => {
+    if (req.body.email === undefined) {
+        // body invalid
+        return res.status(400).json({
+            message: 'Invalid body'
+        });
+    }
+    const email = req.body.email;
+
+    const existUser = await getUserFromEmail(email);
+    if (existUser) {
+        return res.status(409).json({
+            message: 'User already exist'
+        });
+    }
+
+    // TODO: Query monospace member
+    const member = queryMember(email);
+    if (!member) {
+        return res.status(404).json({
+            message: 'Membership not found'
+        });
+    }
+
+    const password = createPassword(8);
+    const user = await createUser(
+        member.ID,
+        member.name,
+        member.email,
+        password,
+        member.phoneNumber,
+        0
+    );
+
+    // TODO: Send create password email
+    console.log(user.Email);
+    console.log(password);
+
+    return res.status(200).json({
+        message: 'Registration success'
+    });
+};
+
+
+const requestChangePassword = async (req, res) => {
+    if (req.body.email === undefined) {
+        // body invalid
+        return res.status(400).json({
+            message: 'Invalid body'
+        });
+    }
+    const email = req.body.email;
+
+    const user = await getUserFromEmail(email);
+    if (!user) {
+        return res.status(404).json({
+            message: 'User not found'
+        });
+    }
+
+    const password = createPassword(8);
+    await updatePassword(user.ID, password, true);
+
+    // TODO: Send create password email
+    console.log(user.Email);
+    console.log(password);
+
+    return res.status(200).json({
+        message: 'Request success'
+    });
+};
+
+const changePassword = async (req, res) => {
+    if (req.body.password === undefined) {
+        // body invalid
+        return res.status(400).json({
+            message: 'Invalid body'
+        });
+    }
+    await updatePassword(req.user, req.body.password);
+
+    return res.status(200).json({
+        message: 'Password updated'
+    });
+};
+
+export {
+    login,
+    register,
+    changePassword as updatePassword,
+    requestChangePassword
+};
