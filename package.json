@@ -28,7 +28,6 @@
     "@babel/register": "^7.18.9",
     "@faker-js/faker": "^7.3.0",
     "eslint": "^8.20.0",
-    "express-generator": "^4.16.1",
     "sequelize-auto": "^0.8.8",
     "sequelize-cli": "^6.4.1"
   }
