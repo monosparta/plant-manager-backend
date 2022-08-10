@@ -4,6 +4,8 @@ import { getUserFromEmail, createUser, updatePassword } from '../services/user';
 import { getRentData } from '../services/rent';
 import { createPassword } from '../services/randomPassword';
 import { queryMember } from '../services/fakeMembership';
+import { autoSendMail } from '../services/mailSender';
+import {readFileSync} from 'fs';
 
 const login = async (req, res) => {
     if (req.body.email === undefined || req.body.password === undefined) {
@@ -85,9 +87,11 @@ const register = async (req, res) => {
         0
     );
 
-    // TODO: Send create password email
-    console.log(user.Email);
-    console.log(password);
+    // Send create password email
+    const mailBody = readFileSync('mailBody.txt', 'utf8').replace('{password}', password);
+
+    // Send email function
+    autoSendMail(user.Email, '植物租借管理系統:建立帳號通知信件' , mailBody);
 
     return res.status(200).json({
         message: 'Registration success'
