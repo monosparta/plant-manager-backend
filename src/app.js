@@ -7,6 +7,7 @@ import cors from 'cors';
 import indexRouter from './routes/index';
 import userRouter from './routes/user';
 import rentRouter from './routes/rent';
+import adminRouter from './routes/admin';
 
 const app = express();
 
@@ -22,5 +23,6 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use('/', indexRouter);
 app.use('/api/user', userRouter);
 app.use('/api/rent', rentRouter);
+app.use('/api/admin', adminRouter);
 
 export default app;
