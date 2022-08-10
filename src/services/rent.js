@@ -2,8 +2,15 @@
 import db from '../db/models';
 import { getPlant } from './plant';
 import { Op } from 'sequelize';
+import { getUserFromID } from './user';
 
 /* Get rent data from user GET users data */
+const getAllRentData = async () => {
+    const rents = await getAllRents();
+
+    return getRentData(rents, true);
+};
+
 const getUserRentData = async userId => {
     const rents = await getUserRents(userId);
 
@@ -16,12 +23,12 @@ const getOtherUserRentData = async userId => {
     return getRentData(rents);
 };
 
-const getRentData = async rents => {
+const getRentData = async (rents, showUser = false) => {
     const rentsData = [];
     for (const rent of rents) {
         const plant = await getPlant(rent.Plant_ID);
 
-        rentsData.push({
+        const rentData = {
             id: rent.ID,
             plant: (plant !== null) ? {
                 name: plant.Name,
@@ -31,7 +38,22 @@ const getRentData = async rents => {
                 minHumid: plant.Min_Humid
             } : null,
             container: rent.Container_ID
-        });
+        };
+
+        if (showUser) {
+            const user = await getUserFromID(rent.User_ID);
+
+            rentData.owner = {
+                id: user.ID,
+                name: user.Name,
+                email: user.Email,
+                phoneNumber: user.Phone_Number,
+                isDefaultPassword: user.Is_Default_Password,
+                role: user.Role
+            };
+        }
+
+        rentsData.push(rentData);
     }
 
     return rentsData;
@@ -40,6 +62,8 @@ const getRentData = async rents => {
 const getRentById = ID => db.Rent.findOne({ where: { ID } });
 
 const getUserRents = userId => db.Rent.findAll({ where: { User_ID: userId } });
+
+const getAllRents = () => db.Rent.findAll();
 
 const getOtherUserRents = userId =>
     db.Rent.findAll({
@@ -71,5 +95,6 @@ export {
     insertRent,
     assignContainer,
     assignPlant,
-    getRentById
+    getRentById,
+    getAllRentData
 };
