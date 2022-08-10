@@ -34,11 +34,11 @@ const updatePlantInfo = async (req, res) => {
         req.body.rent === undefined ||
         req.body.name === undefined ||
         req.body.intro === undefined ||
-        req.body.nickName === undefined ||
+        req.body.nickname === undefined ||
         req.body.minHumid === undefined
     ) {
         // delete file because of failure
-        unlinkSync(req.file.path);
+        if (req.file) unlinkSync(req.file.path);
         return res.status(400).json({
             message: 'Invalid body'
         });
@@ -63,7 +63,7 @@ const updatePlantInfo = async (req, res) => {
         req.body.name,
         req.body.intro,
         join('uploads/', req.file.filename),
-        req.body.nickName,
+        req.body.nickname,
         parseInt(req.body.minHumid)
     );
 
