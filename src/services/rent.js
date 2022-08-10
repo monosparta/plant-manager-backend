@@ -5,6 +5,23 @@ import { Op } from 'sequelize';
 import { getUserFromID } from './user';
 
 /* Get rent data from user GET users data */
+
+const getWaitingRentData = async () => {
+    const waitingList = await getWaitingRents();
+
+    const response = [];
+    for (const waiting of waitingList) {
+        const user = await getUserFromID(waiting.User_ID);
+
+        response.push({
+            name: user.Name,
+            email: user.Email
+        });
+    }
+
+    return response;
+};
+
 const getAllRentData = async () => {
     const rents = await getAllRents();
 
@@ -63,6 +80,8 @@ const getRentById = ID => db.Rent.findOne({ where: { ID } });
 
 const getUserRents = userId => db.Rent.findAll({ where: { User_ID: userId } });
 
+const getWaitingRents = () => db.Rent.findAll({ where: { Container_ID: null } });
+
 const getAllRents = () => db.Rent.findAll();
 
 const getOtherUserRents = userId =>
@@ -96,5 +115,6 @@ export {
     assignContainer,
     assignPlant,
     getRentById,
-    getAllRentData
+    getAllRentData,
+    getWaitingRentData
 };

@@ -1,4 +1,4 @@
-import { getAllRentData } from '../services/rent';
+import { getAllRentData, getWaitingRentData } from '../services/rent';
 
 const getRentedList = async (req, res) => {
     return res.status(200).json({
@@ -7,7 +7,12 @@ const getRentedList = async (req, res) => {
     });
 };
 
-const getWaitList = (req, res) => { };
+const getWaitList = async (req, res) => {
+    return res.status(200).json({
+        message: 'Query Success',
+        data: await getWaitingRentData()
+    });
+};
 
 const getRentAmount = (req, res) => { };
 
