@@ -84,6 +84,8 @@ const getWaitingRents = () => db.Rent.findAll({ where: { Container_ID: null } })
 
 const getAllRents = () => db.Rent.findAll();
 
+const deleteRentById = ID => db.Rent.destroy({ where: { ID } });
+
 const getOtherUserRents = userId =>
     db.Rent.findAll({
         where: { User_ID: { [Op.ne]: userId } }
@@ -116,5 +118,6 @@ export {
     assignPlant,
     getRentById,
     getAllRentData,
-    getWaitingRentData
+    getWaitingRentData,
+    deleteRentById
 };
