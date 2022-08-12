@@ -3,6 +3,9 @@ import { deletePlantByID, getPlant } from '../services/plant';
 import { deleteRentById, getAllRentData, getRentById, getWaitingRentData, markContainerTaken } from '../services/rent';
 import { unlinkSync } from 'fs';
 import { join } from 'path';
+import { createUser, getUserFromEmail } from '../services/user';
+import { createPassword } from '../services/randomPassword';
+import { randomUUID } from 'crypto';
 
 const getRentedList = async (req, res) => {
     return res.status(200).json({
@@ -75,4 +78,47 @@ const deleteRent = async (req, res) => {
     });
 };
 
-export { getRentedList, getWaitList, getRentAmount, deleteRent, markRentTaken };
+const createAdminAccount = async (req, res) => {
+    if (req.body.email === undefined || req.body.name === undefined || req.body.phoneNumber === undefined) {
+        // body invalid
+        return res.status(400).json({
+            message: 'Invalid body'
+        });
+    }
+    const email = req.body.email;
+    const username = req.body.name;
+    const phoneNumber = req.body.phoneNumber;
+
+    const existUser = await getUserFromEmail(email);
+    if (existUser) {
+        return res.status(409).json({
+            message: 'User already exist'
+        });
+    }
+    const password = createPassword(8);
+    const user = await createUser(
+        randomUUID(),
+        username,
+        email,
+        password,
+        phoneNumber,
+        1
+    );
+
+    // TODO: Send create password email
+    console.log(user.Email);
+    console.log(password);
+
+    return res.status(200).json({
+        message: 'Registration success'
+    });
+};
+
+export {
+    getRentedList,
+    getWaitList,
+    getRentAmount,
+    deleteRent,
+    markRentTaken,
+    createAdminAccount
+};
