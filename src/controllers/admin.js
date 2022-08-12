@@ -1,6 +1,6 @@
 import { getContainers, getEmptyContainers } from '../services/container';
 import { deletePlantByID, getPlant } from '../services/plant';
-import { deleteRentById, getAllRentData, getRentById, getWaitingRentData } from '../services/rent';
+import { deleteRentById, getAllRentData, getRentById, getWaitingRentData, markContainerTaken } from '../services/rent';
 import { unlinkSync } from 'fs';
 import { join } from 'path';
 
@@ -31,6 +31,28 @@ const getRentAmount = async (req, res) => {
     });
 };
 
+const markRentTaken = async (req, res) => {
+    const rent = await getRentById(req.params.id);
+
+    if (!rent) {
+        return res.status(404).json({
+            message: 'Rent not found'
+        });
+    }
+
+    if (rent.Get_Time) {
+        return res.status(409).json({
+            message: 'Rent already taken'
+        });
+    }
+
+    await markContainerTaken(rent.ID);
+
+    return res.status(200).json({
+        message: 'Delete successful'
+    });
+};
+
 const deleteRent = async (req, res) => {
     const rent = await getRentById(req.params.id);
 
@@ -53,4 +75,4 @@ const deleteRent = async (req, res) => {
     });
 };
 
-export { getRentedList, getWaitList, getRentAmount, deleteRent };
+export { getRentedList, getWaitList, getRentAmount, deleteRent, markRentTaken };

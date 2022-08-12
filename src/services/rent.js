@@ -97,6 +97,12 @@ const insertRent = userId =>
         Register_Time: new Date()
     });
 
+const markContainerTaken = ID =>
+    db.Rent.update({
+        Get_Time: new Date()
+    }, { where: { ID } });
+
+
 const assignContainer = (ID, containerId, deadline = 5) =>
     db.Rent.update({
         Container_ID: containerId,
@@ -119,5 +125,6 @@ export {
     getRentById,
     getAllRentData,
     getWaitingRentData,
-    deleteRentById
+    deleteRentById,
+    markContainerTaken
 };
