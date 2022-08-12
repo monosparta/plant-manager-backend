@@ -9,7 +9,7 @@ router.get('/rentedInfo', verifyToken, checkAdmin, getRentedList);
 
 router.get('/waitList', verifyToken, checkAdmin, getWaitList);
 
-router.get('/rentedAmout', verifyToken, checkAdmin, getRentAmount);
+router.get('/rentedAmount', verifyToken, checkAdmin, getRentAmount);
 
 router.delete('/rent/:id', verifyToken, checkAdmin, deleteRent);
 
