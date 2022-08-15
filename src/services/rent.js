@@ -10,10 +10,12 @@ const getWaitingRentData = async () => {
     const waitingList = await getWaitingRents();
 
     const response = [];
+    let index = 0;
     for (const waiting of waitingList) {
         const user = await getUserFromID(waiting.User_ID);
 
         response.push({
+            index: ++index,
             name: user.Name,
             email: user.Email
         });
