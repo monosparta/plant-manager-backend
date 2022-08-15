@@ -53,7 +53,7 @@ const getRentData = async (rents, showUser = false) => {
                 name: plant.Name,
                 intro: plant.Intro,
                 imgPath: plant.Img_Path,
-                nickName: plant.Nickname,
+                nickname: plant.Nickname,
                 minHumid: plant.Min_Humid
             } : null,
             container: rent.Container_ID
