@@ -14,14 +14,13 @@ const readOrCreateFakeMember = () => {
     }
 
     for (const member of membershipRaw) {
-        if (!member.ID || !member.name || !member.email || !member.phoneNumber) {
+        if (!member.ID || !member.name || !member.email) {
             return generateFakeMember(5);
         }
         membership.push({
             ID: member.ID,
             name: member.name,
-            email: member.email,
-            phoneNumber: member.phoneNumber
+            email: member.email
         });
     }
 };
@@ -40,7 +39,6 @@ const generateMemberData = () => {
     data.ID = faker.datatype.uuid();
     data.name = faker.name.firstName();
     data.email = faker.internet.email(data.name);
-    data.phoneNumber = faker.phone.number('+8869########');
     return data;
 };
 

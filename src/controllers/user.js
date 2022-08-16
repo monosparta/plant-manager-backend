@@ -11,7 +11,6 @@ const getUser = async (req, res) => {
             id: user.ID,
             name: user.Name,
             email: user.Email,
-            phoneNumber: user.Phone_Number,
             isDefaultPassword: user.Is_Default_Password,
             role: user.Role
         },
