@@ -9,7 +9,7 @@ const transporter = nodeMailer.createTransport({
     }
 });
 
-const autoSendMail = (to, subject, mailBody) =>{
+const sendMail = (to, subject, mailBody) => {
 
     // mail setting variable
     const mailOptions = {
@@ -27,5 +27,5 @@ const autoSendMail = (to, subject, mailBody) =>{
 };
 
 export{
-    autoSendMail
+    sendMail
 };

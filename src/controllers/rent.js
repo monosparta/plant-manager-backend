@@ -2,7 +2,9 @@ import { getEmptyContainers } from '../services/container';
 import { createPlant } from '../services/plant';
 import { assignContainer, assignPlant, getOtherUserRentData, getRentById, getWaitingRents, insertRent } from '../services/rent';
 import { join } from 'path';
-import { unlinkSync } from 'fs';
+import { unlinkSync, readFileSync } from 'fs';
+import { getUserFromID } from '../services/user';
+import { sendMail } from '../services/mailSender';
 
 const listOtherRents = async (req, res) => {
     res.status(200).json({
@@ -28,16 +30,24 @@ const autoAssignContainer = async () => {
     if (emptyContainers.length !== 0 && waitingList.length !== 0) {
         let index = 0;
         for (const rent of waitingList) {
+            const user = await getUserFromID(rent.User_ID);
             await assignContainer(rent.ID, emptyContainers[index++].id);
-            // TODO: Send fill from email
+
+            const newRent = await getRentById(rent.ID);
+
+            let expireDate = newRent.Rent_Time;
+            expireDate.setDate(expireDate.getDate() + newRent.Deadline);
+            const mailBody = readFileSync('template/assignContainer.html', 'utf8')
+                .replace('{name}', user.Name)
+                .replace('{expire}', expireDate.toLocaleDateString('zh-TW'));
+            sendMail(user.Email, '植物租借管理系統：有新盆器可用', mailBody);
+
             if (index >= emptyContainers.length) break;
         }
     }
 };
 
 const updatePlantInfo = async (req, res) => {
-    console.log(req.file);
-    console.log(req.body);
     if (
         req.file === undefined ||
         req.body.rent === undefined ||
