@@ -68,3 +68,6 @@ fakeMemberShip.json
 
 # uploaded images
 public/uploads/
+
+# debug file
+debug/
