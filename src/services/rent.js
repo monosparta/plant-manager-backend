@@ -128,6 +128,7 @@ export {
     assignPlant,
     getRentById,
     getAllRentData,
+    getWaitingRents,
     getWaitingRentData,
     deleteRentById,
     markContainerTaken

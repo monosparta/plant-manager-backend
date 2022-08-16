@@ -1,6 +1,6 @@
 import { getEmptyContainers } from '../services/container';
 import { createPlant } from '../services/plant';
-import { assignContainer, assignPlant, getOtherUserRentData, getRentById, insertRent } from '../services/rent';
+import { assignContainer, assignPlant, getOtherUserRentData, getRentById, getWaitingRents, insertRent } from '../services/rent';
 import { join } from 'path';
 import { unlinkSync } from 'fs';
 
@@ -12,18 +12,27 @@ const listOtherRents = async (req, res) => {
 };
 
 const registerRent = async (req, res) => {
-    const rent = await insertRent(req.user);
+    await insertRent(req.user);
 
-    // TODO: Auto assign container when avaliable
-    const emptyContainers = await getEmptyContainers();
-    if (emptyContainers.length !== 0) {
-        await assignContainer(rent.ID, emptyContainers[0].id);
-        // TODO: Send fill from email
-    }
+    await autoAssignContainer();
 
     res.status(200).json({
         message: 'Registration successful'
     });
+};
+
+const autoAssignContainer = async () => {
+    const waitingList = await getWaitingRents();
+
+    const emptyContainers = await getEmptyContainers();
+    if (emptyContainers.length !== 0 && waitingList.length !== 0) {
+        let index = 0;
+        for (const rent of waitingList) {
+            await assignContainer(rent.ID, emptyContainers[index++].id);
+            // TODO: Send fill from email
+            if (index >= emptyContainers.length) break;
+        }
+    }
 };
 
 const updatePlantInfo = async (req, res) => {
@@ -51,7 +60,6 @@ const updatePlantInfo = async (req, res) => {
         });
     }
 
-    // TODO: To be discussed
     if (rent.Plant_ID !== null) {
         unlinkSync(req.file.path);
         return res.status(409).json({
@@ -73,4 +81,4 @@ const updatePlantInfo = async (req, res) => {
     });
 };
 
-export { listOtherRents, registerRent, updatePlantInfo };
+export { listOtherRents, registerRent, updatePlantInfo, autoAssignContainer };

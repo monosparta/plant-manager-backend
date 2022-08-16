@@ -6,6 +6,7 @@ import { join } from 'path';
 import { createUser, getUserFromEmail } from '../services/user';
 import { createPassword } from '../services/randomPassword';
 import { randomUUID } from 'crypto';
+import { autoAssignContainer } from './rent';
 
 const getRentedList = async (req, res) => {
     return res.status(200).json({
@@ -72,6 +73,8 @@ const deleteRent = async (req, res) => {
     }
 
     await deleteRentById(req.params.id);
+
+    await autoAssignContainer();
 
     return res.status(200).json({
         message: 'Delete successful'
