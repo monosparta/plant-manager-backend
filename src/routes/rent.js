@@ -3,7 +3,7 @@ import { listOtherRents, registerRent, updatePlantInfo } from '../controllers/re
 const router = express.Router();
 
 import { verifyToken } from '../middlewares/authJWT';
-import { upload } from '../services/formParser';
+import { upload } from '../middlewares/formParser';
 
 router.get('/list/others', verifyToken, listOtherRents);
 router.post('/register', verifyToken, registerRent);
