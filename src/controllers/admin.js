@@ -82,7 +82,7 @@ const deleteRent = async (req, res) => {
 };
 
 const createAdminAccount = async (req, res) => {
-    if (req.body.email === undefined || req.body.name === undefined || req.body.phoneNumber === undefined) {
+    if (req.body.email === undefined || req.body.name === undefined) {
         // body invalid
         return res.status(400).json({
             message: 'Invalid body'
@@ -90,7 +90,6 @@ const createAdminAccount = async (req, res) => {
     }
     const email = req.body.email;
     const username = req.body.name;
-    const phoneNumber = req.body.phoneNumber;
 
     const existUser = await getUserFromEmail(email);
     if (existUser) {
@@ -104,7 +103,6 @@ const createAdminAccount = async (req, res) => {
         username,
         email,
         password,
-        phoneNumber,
         1
     );
 

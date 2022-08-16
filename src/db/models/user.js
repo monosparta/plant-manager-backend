@@ -33,10 +33,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(64),
         allowNull: false,
       },
-      Phone_Number: {
-        type: DataTypes.STRING(20),
-        allowNull: false,
-      },
       Is_Default_Password: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
