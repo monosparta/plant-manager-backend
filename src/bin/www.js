@@ -3,6 +3,7 @@
 /**
  * Module dependencies.
  */
+import 'express-async-errors';
 import dotenv from 'dotenv';
 dotenv.config();
 import app from '../app';

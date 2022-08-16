@@ -8,6 +8,7 @@ import indexRouter from './routes/index';
 import userRouter from './routes/user';
 import rentRouter from './routes/rent';
 import adminRouter from './routes/admin';
+import { handleError } from './middlewares/errorHandler';
 
 const app = express();
 
@@ -24,5 +25,8 @@ app.use('/', indexRouter);
 app.use('/api/user', userRouter);
 app.use('/api/rent', rentRouter);
 app.use('/api/admin', adminRouter);
+
+// error handler
+app.use(handleError);
 
 export default app;
