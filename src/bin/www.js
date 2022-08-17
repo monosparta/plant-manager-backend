@@ -10,7 +10,7 @@ import app from '../app';
 import debugLib from 'debug';
 import http from 'http';
 const debug = debugLib('your-project-name:server');
-import mqtt from 'mqtt';
+import { initSocketServer } from '../services/realTime';
 
 /**
  * Get port from environment and store in Express.
@@ -33,44 +33,7 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-/**
- * Create the socket connection.
- */
-
-const io = require('socket.io')(server);
-
-/**
- * Create the MQTT client to connect to the MQTT Broker
- */
-
-const mqttHost = process.env.MQTT_HOST || 'localhost';
-const mqttPort = process.env.MQTT_PORT || 1883;
-const client = mqtt.connect(`mqtt://${mqttHost}:${mqttPort}`, {
-    username: process.env.MQTT_USERNAME,
-    password: process.env.MQTT_PASSWORD
-});
-
-/**
- * Subscribe to the topic
- */
-
-client.on('connect', function () {
-    console.log('MQTT CONNECTION START');
-    client.subscribe(process.env.MQTT_TOPIC || 'Plant/Data');
-});
-
-/**
- * Websocket will emit the message when the client get the response from the topic
- */
-
-io.on('connection', function (socket) {
-    client.on('message', function (topic, msg) {
-        socket.emit(
-            process.env.SOCKET_TOPIC || 'Plant/Data',
-            JSON.parse(msg.toString())
-        );
-    });
-});
+initSocketServer(server);
 
 /**
  * Normalize a port into a number, string, or false.
