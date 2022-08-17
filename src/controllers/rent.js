@@ -40,7 +40,11 @@ const autoAssignContainer = async () => {
             const mailBody = readFileSync('template/assignContainer.html', 'utf8')
                 .replace('{name}', user.Name)
                 .replace('{expire}', expireDate.toLocaleDateString('zh-TW'));
-            sendMail(user.Email, '植物租借管理系統：有新盆器可用', mailBody);
+            sendMail(
+                user.Email,
+                '【Monospace 植物租借管理系統】有新盆器可用',
+                mailBody
+            );
 
             if (index >= emptyContainers.length) break;
         }

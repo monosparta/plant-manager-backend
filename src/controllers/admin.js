@@ -113,7 +113,11 @@ const createAdminAccount = async (req, res) => {
         .replace('{name}', user.Name)
         .replace('{assigner}', assigner.Name)
         .replace('{password}', password);
-    sendMail(user.Email, '植物租借管理系統:新增管理員通知', mailBody);
+    sendMail(
+        user.Email,
+        '【Monospace 植物租借管理系統】新增管理員通知',
+        mailBody
+    );
 
     return res.status(200).json({
         message: 'Registration success'

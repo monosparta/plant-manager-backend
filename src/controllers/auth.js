@@ -86,8 +86,14 @@ const register = async (req, res) => {
         0
     );
 
-    const mailBody = readFileSync('template/register.html', 'utf8').replace('{password}', password);
-    sendMail(user.Email, '植物租借管理系統:建立帳號通知信件', mailBody);
+    const mailBody = readFileSync('template/register.html', 'utf8')
+        .replace('{name}', user.Name)
+        .replace('{password}', password);
+    sendMail(
+        user.Email,
+        '【Monospace 植物租借管理系統】建立帳號通知',
+        mailBody
+    );
 
 
     return res.status(200).json({
@@ -115,8 +121,10 @@ const requestChangePassword = async (req, res) => {
     const password = createPassword(8);
     await updatePassword(user.ID, password, true);
 
-    const mailBody = readFileSync('template/resetPassword.html', 'utf8').replace('{password}', password);
-    sendMail(user.Email, '植物租借管理系統:重設密碼', mailBody);
+    const mailBody = readFileSync('template/resetPassword.html', 'utf8')
+        .replace('{name}', user.Name)
+        .replace('{password}', password);
+    sendMail(user.Email, '【Monospace 植物租借管理系統】您的密碼已重設', mailBody);
     return res.status(200).json({
         message: 'Request success'
     });
