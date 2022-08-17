@@ -7,7 +7,7 @@ import { createUser, getUserFromEmail, getUserFromID } from '../services/user';
 import { createPassword } from '../services/randomPassword';
 import { randomUUID } from 'crypto';
 import { autoAssignContainer } from './rent';
-import { sendMail } from '../services/mailSender';
+import { sendMail, validateEmail } from '../services/mailSender';
 
 const getRentedList = async (req, res) => {
     return res.status(200).json({
@@ -89,6 +89,12 @@ const createAdminAccount = async (req, res) => {
             message: 'Invalid body'
         });
     }
+    if (!validateEmail(req.body.email)) {
+        return res.status(400).json({
+            message: 'Invalid email'
+        });
+    }
+
     const assigner = await getUserFromID(req.user);
 
     const email = req.body.email;

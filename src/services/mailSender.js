@@ -21,11 +21,15 @@ const sendMail = (to, subject, mailBody) => {
 
     // call send email function
     transporter.sendMail(mailOptions, (err, info) => {
-        if(err) throw err;
+        if(err) console.log(err);
         // if(info) console.log(`Done sending!, time: ${timeStr}`, info);
     });
 };
 
-export{
-    sendMail
+const validateEmail = (email) => {
+    const emailRegex =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return emailRegex.test(email);
 };
+
+export { sendMail, validateEmail };
