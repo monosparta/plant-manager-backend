@@ -44,8 +44,8 @@ const initSocketServer = (server) => {
 
         emitData({
             light: msg.light,
-            soil_humi: msg.soil_humi,
-            container_ID: msg.container_ID
+            soilHumid: msg.soil_humi,
+            container: msg.container_ID
         });
     });
 
@@ -84,8 +84,8 @@ const initSocketServer = (server) => {
                 );
                 emitData({
                     light: '---',
-                    soil_humi: '--.--',
-                    container_ID: lastData[data].container_ID
+                    soilHumid: '--.--',
+                    container: lastData[data].container_ID
                 });
                 delete lastData[data];
             }
