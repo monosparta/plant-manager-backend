@@ -33,9 +33,20 @@ const initSocketServer = (server) => {
 
     client.on('message', function (topic, payload) {
         const msg = JSON.parse(payload.toString());
+        msg.time = new Date(msg.time[0], msg.time[1] - 1, msg.time[2], msg.time[3], msg.time[4], msg.time[5]);
+
+        if (!lastData[msg.container_ID]) {
+            console.log(
+                `Container ${msg.container_ID} connected.`
+            );
+        }
         lastData[msg.container_ID] = msg;
 
-        emitSocket.forEach(x => x(msg));
+        emitData({
+            light: msg.light,
+            soil_humi: msg.soil_humi,
+            container_ID: msg.container_ID
+        });
     });
 
     /**
@@ -59,6 +70,31 @@ const initSocketServer = (server) => {
 
         emitSocket.push(emit);
     });
+
+    setInterval(() => {
+        for (const data of Object.keys(lastData)) {
+            if (!lastData[data]) continue;
+
+            const now = new Date();
+            const valid = new Date(lastData[data].time);
+            valid.setSeconds(valid.getSeconds() + lastData[data].valid);
+            if (now > valid) {
+                console.log(
+                    `Data of container ${lastData[data].container_ID} expired.`
+                );
+                emitData({
+                    light: '---',
+                    soil_humi: '--.--',
+                    container_ID: lastData[data].container_ID
+                });
+                delete lastData[data];
+            }
+        }
+    }, 1000);
+};
+
+const emitData = (data) => {
+    emitSocket.forEach((x) => x(data));
 };
 
 export { initSocketServer };
