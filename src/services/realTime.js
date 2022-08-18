@@ -54,13 +54,6 @@ const initSocketServer = (server) => {
      */
 
     io.on('connection', function (socket) {
-        for (const data of Object.keys(lastData)) {
-            if (!lastData[data]) continue;
-            socket.emit(
-                process.env.SOCKET_TOPIC || 'Plant/Data',
-                lastData[data]
-            );
-        }
         const emit = (msg) => socket.emit(process.env.SOCKET_TOPIC || 'Plant/Data', msg);
 
         socket.on('disconnect', () => {
@@ -69,6 +62,20 @@ const initSocketServer = (server) => {
         });
 
         emitSocket.push(emit);
+
+        socket.on('lastData', (msg) => {
+            if (lastData[msg]) {
+                socket.emit(
+                    process.env.SOCKET_TOPIC || 'Plant/Data',
+                    {
+                        light: lastData[msg].light,
+                        soilHumid: lastData[msg].soil_humi,
+                        container: lastData[msg].container_ID
+                    }
+                );
+            }
+        });
+
     });
 
     setInterval(() => {
