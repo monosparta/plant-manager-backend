@@ -62,3 +62,12 @@ typings/
 
 # es6 output
 dist/
+
+# fake data 
+fakeMemberShip.json
+
+# uploaded images
+public/uploads/
+
+# debug file
+debug/

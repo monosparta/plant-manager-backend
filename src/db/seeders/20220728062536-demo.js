@@ -8,7 +8,6 @@ const generateUserData = () => {
   data.Name = faker.name.firstName();
   data.Email = faker.internet.email(data.Name);
   data.Password = bcrypt.hashSync("demo",10);
-  data.Phone_Number = faker.phone.number("+8869########");
   data.Is_Default_Password = false;
   data.Role = 0;
   return data;

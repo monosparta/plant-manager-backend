@@ -5,8 +5,10 @@ import logger from 'morgan';
 import cors from 'cors';
 
 import indexRouter from './routes/index';
-import authRouter from './routes/auth';
 import userRouter from './routes/user';
+import rentRouter from './routes/rent';
+import adminRouter from './routes/admin';
+import { handleError } from './middlewares/errorHandler';
 
 const app = express();
 
@@ -20,7 +22,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
 
 app.use('/', indexRouter);
-app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
+app.use('/api/rent', rentRouter);
+app.use('/api/admin', adminRouter);
+
+// error handler
+app.use(handleError);
 
 export default app;

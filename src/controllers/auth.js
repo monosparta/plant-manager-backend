@@ -1,17 +1,22 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { getUserFromEmail } from '../services/user';
-import { getRentData } from '../services/rent';
+import { getUserFromEmail, createUser, updatePassword } from '../services/user';
+import { getUserRentData } from '../services/rent';
+import { createPassword } from '../services/randomPassword';
+import { queryMember } from '../services/fakeMembership';
+import { sendMail } from '../services/mailSender';
+import { readFileSync } from 'fs';
+import { roles } from '../middlewares/permission';
 
 const login = async (req, res) => {
-    if (req.body.account === undefined || req.body.password === undefined) {
+    if (!req.body.email || !req.body.password) {
         // body invalid
         return res.status(400).json({
             message: 'Invalid body'
         });
     }
-    const email = req.body.account;
-    const password = req.body.password;
+
+    const { email, password } = req.body;
 
     const user = await getUserFromEmail(email);
     // user not found
@@ -41,12 +46,108 @@ const login = async (req, res) => {
             id: user.ID,
             name: user.Name,
             email: user.Email,
-            phoneNumber: user.Phone_Number,
             isDefaultPassword: user.Is_Default_Password,
             role: user.Role
         },
-        rents: await getRentData(user.ID)
+        rents: await getUserRentData(user.ID)
     });
 };
 
-export { login };
+const register = async (req, res) => {
+    if (!req.body.email) {
+        // body invalid
+        return res.status(400).json({
+            message: 'Invalid body'
+        });
+    }
+    const email = req.body.email;
+
+    const existUser = await getUserFromEmail(email);
+    if (existUser) {
+        return res.status(409).json({
+            message: 'User already exist'
+        });
+    }
+
+    // TODO: Query monospace member
+    const member = queryMember(email);
+    if (!member) {
+        return res.status(404).json({
+            message: 'Membership not found'
+        });
+    }
+
+    const password = createPassword(8);
+    const user = await createUser(
+        member.ID,
+        member.name,
+        member.email,
+        password,
+        roles.user
+    );
+
+    const mailBody = readFileSync('template/register.html', 'utf8')
+        .replace('{name}', user.Name)
+        .replace('{password}', password);
+    sendMail(
+        user.Email,
+        '【Monospace 植物租借管理系統】建立帳號通知',
+        mailBody
+    );
+
+
+    return res.status(200).json({
+        message: 'Registration success'
+    });
+};
+
+// User request password change via forget password
+const requestChangePassword = async (req, res) => {
+    if (!req.body.email) {
+        // body invalid
+        return res.status(400).json({
+            message: 'Invalid body'
+        });
+    }
+    const email = req.body.email;
+
+    const user = await getUserFromEmail(email);
+    if (!user) {
+        return res.status(404).json({
+            message: 'User not found'
+        });
+    }
+
+    const password = createPassword(8);
+    await updatePassword(user.ID, password, true);
+
+    const mailBody = readFileSync('template/resetPassword.html', 'utf8')
+        .replace('{name}', user.Name)
+        .replace('{password}', password);
+    sendMail(user.Email, '【Monospace 植物租借管理系統】您的密碼已重設', mailBody);
+    return res.status(200).json({
+        message: 'Request success'
+    });
+};
+
+// User change the password
+const changePassword = async (req, res) => {
+    if (!req.body.password) {
+        // body invalid
+        return res.status(400).json({
+            message: 'Invalid body'
+        });
+    }
+    await updatePassword(req.userId, req.body.password);
+
+    return res.status(200).json({
+        message: 'Password updated'
+    });
+};
+
+export {
+    login,
+    register,
+    changePassword as updatePassword,
+    requestChangePassword
+};

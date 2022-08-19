@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { getUserFromID } from '../services/user';
 
 const verifyToken = (req, res, next) => {
     if (
@@ -18,14 +19,14 @@ const verifyToken = (req, res, next) => {
         process.env.JWT_SECRECT,
         async (err, decode) => {
             // token invalid
-            if (err) {
+            if (err || !(await getUserFromID(decode.id))) {
                 return res.status(401).json({
                     message: 'Invalid JWT token'
                 });
             }
 
             // return user
-            req.user = decode.id;
+            req.userId = decode.id;
             next();
         }
     );
