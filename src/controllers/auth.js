@@ -138,7 +138,7 @@ const changePassword = async (req, res) => {
             message: 'Invalid body'
         });
     }
-    await updatePassword(req.user, req.body.password);
+    await updatePassword(req.userId, req.body.password);
 
     return res.status(200).json({
         message: 'Password updated'

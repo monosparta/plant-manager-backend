@@ -9,12 +9,12 @@ import { sendMail } from '../services/mailSender';
 const listOtherRents = async (req, res) => {
     res.status(200).json({
         message: 'Query Success',
-        data: await getOtherUserRentData(req.user)
+        data: await getOtherUserRentData(req.userId)
     });
 };
 
 const registerRent = async (req, res) => {
-    const insertedRent = await insertRent(req.user);
+    const insertedRent = await insertRent(req.userId);
 
     await autoAssignContainer();
 
@@ -68,7 +68,7 @@ const updatePlantInfo = async (req, res) => {
         });
     }
     const rent = await getRentById(parseInt(req.body.rent));
-    if (!rent || !rent.Container_ID || rent.User_ID !== req.user) {
+    if (!rent || !rent.Container_ID || rent.User_ID !== req.userId) {
         unlinkSync(req.file.path);
         return res.status(404).json({
             message: 'Requested rent not found'

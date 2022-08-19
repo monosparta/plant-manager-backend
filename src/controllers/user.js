@@ -3,7 +3,7 @@ import { getUserRentData } from '../services/rent';
 
 /* GET users data */
 const getUser = async (req, res) => {
-    const user = await getUserFromID(req.user);
+    const user = await getUserFromID(req.userId);
 
     res.status(200).json({
         message: 'Query Success',

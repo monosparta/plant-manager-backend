@@ -96,7 +96,7 @@ const createAdminAccount = async (req, res) => {
         });
     }
 
-    const assigner = await getUserFromID(req.user);
+    const assigner = await getUserFromID(req.userId);
 
     const email = req.body.email;
     const username = req.body.name;

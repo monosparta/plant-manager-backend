@@ -6,7 +6,7 @@ const roles = {
 };
 
 const checkAdmin = async (req, res, next) => {
-    const user = await getUserFromID(req.user);
+    const user = await getUserFromID(req.userId);
     if (user.Role !== roles.admin) {
         return res.status(403).json({
             message: 'Permission denied!'
