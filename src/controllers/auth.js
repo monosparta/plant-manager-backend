@@ -15,8 +15,7 @@ const login = async (req, res) => {
         });
     }
 
-    const email = req.body.email;
-    const password = req.body.password;
+    const { email, password } = req.body;
 
     const user = await getUserFromEmail(email);
     // user not found
