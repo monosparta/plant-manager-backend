@@ -14,12 +14,13 @@ const listOtherRents = async (req, res) => {
 };
 
 const registerRent = async (req, res) => {
-    await insertRent(req.user);
+    const insertedRent = await insertRent(req.user);
 
     await autoAssignContainer();
 
     res.status(200).json({
-        message: 'Registration successful'
+        message: 'Registration successful',
+        waiting: (await getRentById(insertedRent.ID)).Container_ID === null
     });
 };
 
