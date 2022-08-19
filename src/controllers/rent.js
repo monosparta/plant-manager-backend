@@ -67,7 +67,7 @@ const updatePlantInfo = async (req, res) => {
         });
     }
     const rent = await getRentById(parseInt(req.body.rent));
-    if (rent === null || rent.Container_ID === null) {
+    if (rent === null || rent.Container_ID === null || rent.User_ID !== req.user) {
         unlinkSync(req.file.path);
         return res.status(404).json({
             message: 'Requested rent not found'
