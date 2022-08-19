@@ -6,9 +6,9 @@ const getUserFromEmail = Email => db.User.findOne({ where: { Email } });
 
 const getUserFromID = ID => db.User.findOne({ where: { ID } });
 
-const createUser = (ID, userName, email, password, role) => db.User.create({
+const createUser = (ID, username, email, password, role) => db.User.create({
     ID,
-    Name: userName,
+    Name: username,
     Email: email,
     Password: bcrypt.hashSync(password ,10),
     Is_Default_Password: true,

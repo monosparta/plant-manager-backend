@@ -9,7 +9,7 @@ dotenv.config();
 import app from '../app';
 import debugLib from 'debug';
 import http from 'http';
-const debug = debugLib('your-project-name:server');
+const debug = debugLib('rental-planter:server');
 import { initSocketServer } from '../services/realTime';
 
 /**

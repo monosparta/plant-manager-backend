@@ -54,7 +54,7 @@ const markRentTaken = async (req, res) => {
     await markContainerTaken(rent.ID);
 
     return res.status(200).json({
-        message: 'Delete successful'
+        message: 'Update successful'
     });
 };
 
