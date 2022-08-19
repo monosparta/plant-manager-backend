@@ -6,6 +6,7 @@ import { createPassword } from '../services/randomPassword';
 import { queryMember } from '../services/fakeMembership';
 import { sendMail } from '../services/mailSender';
 import { readFileSync } from 'fs';
+import { roles } from '../middlewares/permission';
 
 const login = async (req, res) => {
     if (!req.body.email || !req.body.password) {
@@ -82,7 +83,7 @@ const register = async (req, res) => {
         member.name,
         member.email,
         password,
-        0
+        roles.user
     );
 
     const mailBody = readFileSync('template/register.html', 'utf8')

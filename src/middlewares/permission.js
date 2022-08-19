@@ -1,8 +1,13 @@
 import { getUserFromID } from '../services/user';
 
+const roles = {
+    user: 0,
+    admin: 1
+};
+
 const checkAdmin = async (req, res, next) => {
     const user = await getUserFromID(req.user);
-    if (user.Role !== 1) {
+    if (user.Role !== roles.admin) {
         return res.status(403).json({
             message: 'Permission denied!'
         });
@@ -11,4 +16,4 @@ const checkAdmin = async (req, res, next) => {
     next();
 };
 
-export { checkAdmin };
+export { checkAdmin, roles };

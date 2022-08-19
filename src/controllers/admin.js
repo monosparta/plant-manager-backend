@@ -8,6 +8,7 @@ import { createPassword } from '../services/randomPassword';
 import { randomUUID } from 'crypto';
 import { autoAssignContainer } from './rent';
 import { sendMail, validateEmail } from '../services/mailSender';
+import { roles } from '../middlewares/permission';
 
 const getRentedList = async (req, res) => {
     return res.status(200).json({
@@ -113,7 +114,7 @@ const createAdminAccount = async (req, res) => {
         username,
         email,
         password,
-        1
+        roles.admin
     );
 
     const mailBody = readFileSync('template/adminAdd.html', 'utf8')
