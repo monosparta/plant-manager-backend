@@ -45,7 +45,7 @@ const getOtherUserRentData = async userId => {
 const getRentData = async (rents, showUser = false) => {
     const rentsData = [];
     for (const rent of rents) {
-        if (rent.Container_ID === null) continue;
+        if (!rent.Container_ID) continue;
 
         const plant = await getPlant(rent.Plant_ID);
 

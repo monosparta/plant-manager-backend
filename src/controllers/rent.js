@@ -53,12 +53,12 @@ const autoAssignContainer = async () => {
 
 const updatePlantInfo = async (req, res) => {
     if (
-        req.file === undefined ||
-        req.body.rent === undefined ||
-        req.body.name === undefined ||
-        req.body.intro === undefined ||
-        req.body.nickname === undefined ||
-        req.body.minHumid === undefined
+        !req.file ||
+        !req.body.rent ||
+        !req.body.name ||
+        !req.body.intro ||
+        !req.body.nickname ||
+        !req.body.minHumid
     ) {
         // delete file because of failure
         if (req.file) unlinkSync(req.file.path);
@@ -67,14 +67,14 @@ const updatePlantInfo = async (req, res) => {
         });
     }
     const rent = await getRentById(parseInt(req.body.rent));
-    if (rent === null || rent.Container_ID === null || rent.User_ID !== req.user) {
+    if (!rent || !rent.Container_ID || rent.User_ID !== req.user) {
         unlinkSync(req.file.path);
         return res.status(404).json({
             message: 'Requested rent not found'
         });
     }
 
-    if (rent.Plant_ID !== null) {
+    if (rent.Plant_ID) {
         unlinkSync(req.file.path);
         return res.status(409).json({
             message: 'Plant already exist'

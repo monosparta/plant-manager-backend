@@ -83,7 +83,7 @@ const deleteRent = async (req, res) => {
 };
 
 const createAdminAccount = async (req, res) => {
-    if (req.body.email === undefined || req.body.name === undefined) {
+    if (!req.body.email || !req.body.name) {
         // body invalid
         return res.status(400).json({
             message: 'Invalid body'
@@ -106,6 +106,7 @@ const createAdminAccount = async (req, res) => {
             message: 'User already exist'
         });
     }
+
     const password = createPassword(8);
     const user = await createUser(
         randomUUID(),

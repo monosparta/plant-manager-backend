@@ -8,7 +8,7 @@ import { sendMail } from '../services/mailSender';
 import { readFileSync } from 'fs';
 
 const login = async (req, res) => {
-    if (req.body.email === undefined || req.body.password === undefined) {
+    if (!req.body.email || !req.body.password) {
         // body invalid
         return res.status(400).json({
             message: 'Invalid body'
@@ -53,7 +53,7 @@ const login = async (req, res) => {
 };
 
 const register = async (req, res) => {
-    if (req.body.email === undefined) {
+    if (!req.body.email) {
         // body invalid
         return res.status(400).json({
             message: 'Invalid body'
@@ -100,9 +100,9 @@ const register = async (req, res) => {
     });
 };
 
-
+// User request password change via forget password
 const requestChangePassword = async (req, res) => {
-    if (req.body.email === undefined) {
+    if (!req.body.email) {
         // body invalid
         return res.status(400).json({
             message: 'Invalid body'
@@ -129,8 +129,9 @@ const requestChangePassword = async (req, res) => {
     });
 };
 
+// User change the password
 const changePassword = async (req, res) => {
-    if (req.body.password === undefined) {
+    if (!req.body.password) {
         // body invalid
         return res.status(400).json({
             message: 'Invalid body'
