@@ -39,7 +39,7 @@ const autoAssignContainer = async () => {
             let frontUrl = process.env.FRONT_URL;
             if (!frontUrl) {
                 if ((process.env.NODE_ENV || 'development') === 'development') {
-                    frontUrl = 'http://localhost:3000/';
+                    frontUrl = 'http://localhost:3000';
                 }
             }
 
