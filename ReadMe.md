@@ -49,6 +49,7 @@ DEV_DB_PORT=3306 # 資料庫 Port
 
 # Express
 PORT=3000
+FRONT_URL="http://localhost:3000/" # Email 內的前端網址
 
 # MQTT
 MQTT_HOST="localhost" # MQTT host
@@ -75,6 +76,9 @@ STAGE_DB_PASSWORD="" # 密碼
 
 # Json Web Token
 JWT_SECRECT=""
+
+# Express
+FRONT_URL="" # Email 內的前端網址
 
 # MQTT
 MQTT_USERNAME="" # MQTT 使用者名稱
@@ -122,6 +126,9 @@ PROD_DB_PORT=3306 # 資料庫 Port
 
 # Json Web Token
 JWT_SECRECT=""
+
+# Express
+FRONT_URL="" # Email 內的前端網址
 
 # MQTT
 MQTT_USERNAME="" # MQTT 使用者名稱

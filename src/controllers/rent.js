@@ -36,11 +36,22 @@ const autoAssignContainer = async () => {
 
             const newRent = await getRentById(rent.ID);
 
+            let frontUrl = process.env.FRONT_URL;
+            if (!frontUrl) {
+                if ((process.env.NODE_ENV || 'development') === 'development') {
+                    frontUrl = 'http://localhost:3000/';
+                }
+            }
+
             let expireDate = newRent.Rent_Time;
             expireDate.setDate(expireDate.getDate() + newRent.Deadline);
-            const mailBody = readFileSync('template/assignContainer.html', 'utf8')
+            const mailBody = readFileSync(
+                'template/assignContainer.html',
+                'utf8'
+            )
                 .replace('{name}', user.Name)
-                .replace('{expire}', expireDate.toLocaleDateString('zh-TW'));
+                .replace('{expire}', expireDate.toLocaleDateString('zh-TW'))
+                .replace('{url}', `${frontUrl}/rentForm/${rent.ID}`);
             sendMail(
                 user.Email,
                 '【Monospace 植物租借管理系統】有新盆器可用',
