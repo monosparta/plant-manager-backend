@@ -69,8 +69,12 @@ const register = async (req, res) => {
         });
     }
 
-    // TODO: Query monospace member
-    const member = queryMember(email);
+    let member;
+    if (process.env.NODE_ENV === 'production') {
+        // TODO: Query monospace member
+    } else {
+        member = queryMember(email);
+    }
     if (!member) {
         return res.status(404).json({
             message: 'Membership not found'
