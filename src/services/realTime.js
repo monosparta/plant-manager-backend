@@ -63,16 +63,13 @@ const initSocketServer = (server) => {
 
         emitSocket.push(emit);
 
-        socket.on('lastData', (msg) => {
+        socket.on(process.env.SOCKET_REQ_DATA || 'lastData', (msg) => {
             if (lastData[msg]) {
-                socket.emit(
-                    process.env.SOCKET_TOPIC || 'Plant/Data',
-                    {
-                        light: lastData[msg].light,
-                        soilHumid: lastData[msg].soil_humi,
-                        container: lastData[msg].container_ID
-                    }
-                );
+                socket.emit(process.env.SOCKET_TOPIC || 'Plant/Data', {
+                    light: lastData[msg].light,
+                    soilHumid: lastData[msg].soil_humi,
+                    container: lastData[msg].container_ID
+                });
             }
         });
 
