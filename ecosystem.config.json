@@ -1,0 +1,10 @@
+{
+    "apps": [{
+        "name": "Rental-Planter-Backend",
+        "script": "./dist/bin/www.js",
+        "instances": "1",
+        "wait_ready": true,
+        "autorestart": true,
+        "max_restarts": 5
+    }]
+}
