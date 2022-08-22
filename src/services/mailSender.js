@@ -1,4 +1,5 @@
 import nodeMailer from 'nodemailer';
+import { readFileSync, existsSync, writeFileSync } from 'fs';
 
 // create transporter for sending email
 const transporter = nodeMailer.createTransport({
@@ -10,6 +11,19 @@ const transporter = nodeMailer.createTransport({
 });
 
 const sendMail = (to, subject, mailBody) => {
+    if (process.env.NODE_ENV !== 'production') {
+        if (!existsSync('./mailWhitelist.json')) writeFileSync('./mailWhitelist.json', '[]');
+
+        const mailWhiteList = JSON.parse(
+            readFileSync('./mailWhitelist.json', { encoding: 'utf-8' })
+        );
+        if (!mailWhiteList.includes(to)) {
+            console.log(
+                `To: ${to}\nSubject: ${subject}\nContent:\n${mailBody}`
+            );
+            return;
+        }
+    }
 
     // mail setting variable
     const mailOptions = {

@@ -65,6 +65,7 @@ dist/
 
 # fake data 
 fakeMemberShip.json
+mailWhitelist.json
 
 # uploaded images
 public/uploads/
