@@ -6,7 +6,7 @@ module.exports = {
         password: process.env.DEV_DB_PASSWORD,
         database: process.env.DEV_DB_NAME || 'rental-planter',
         host: process.env.DEV_DB_HOSTNAME || '127.0.0.1',
-        port: process.env.DEV_DB_PORT || 3306,
+        port: parseInt(process.env.DEV_DB_PORT, 10) || 3306,
         dialect: 'mysql'
     },
     test: {
@@ -14,7 +14,7 @@ module.exports = {
         password: process.env.CI_DB_PASSWORD,
         database: process.env.CI_DB_NAME || 'rental-planter',
         host: process.env.CI_DB_HOSTNAME || '127.0.0.1',
-        port: process.env.CI_DB_PORT || 3306,
+        port: parseInt(process.env.CI_DB_PORT, 10) || 3306,
         dialect: 'mysql'
     },
     stage: {
@@ -22,7 +22,7 @@ module.exports = {
         password: process.env.STAGE_DB_PASSWORD,
         database: process.env.STAGE_DB_NAME || 'rental-planter',
         host: process.env.STAGE_DB_HOSTNAME || '127.0.0.1',
-        port: process.env.STAGE_DB_PORT || 3306,
+        port: parseInt(process.env.STAGE_DB_PORT, 10) || 3306,
         dialect: 'mysql'
     },
     production: {
@@ -30,7 +30,7 @@ module.exports = {
         password: process.env.PROD_DB_PASSWORD,
         database: process.env.PROD_DB_NAME || 'rental-planter',
         host: process.env.PROD_DB_HOSTNAME,
-        port: process.env.PROD_DB_PORT,
+        port: parseInt(process.env.PROD_DB_PORT, 10),
         dialect: 'mysql'
     }
 };

@@ -15,7 +15,7 @@ const initSocketServer = (server) => {
      */
 
     const mqttHost = process.env.MQTT_HOST || 'localhost';
-    const mqttPort = process.env.MQTT_PORT || 1883;
+    const mqttPort = parseInt(process.env.MQTT_PORT) || 1883;
     const client = mqtt.connect(`mqtt://${mqttHost}:${mqttPort}`, {
         username: process.env.MQTT_USERNAME,
         password: process.env.MQTT_PASSWORD
