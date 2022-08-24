@@ -2,9 +2,9 @@ import { getEmptyContainers } from '../services/container';
 import { createPlant } from '../services/plant';
 import { assignContainer, assignPlant, getOtherUserRentData, getRentById, getWaitingRents, insertRent } from '../services/rent';
 import { join } from 'path';
-import { unlinkSync, readFileSync } from 'fs';
+import { unlinkSync } from 'fs';
 import { getUserFromID } from '../services/user';
-import { sendMail } from '../services/mailSender';
+import { sendRentAvailableEmail } from '../services/mailTemplate';
 
 const listOtherRents = async (req, res) => {
     res.status(200).json({
@@ -36,26 +36,14 @@ const autoAssignContainer = async () => {
 
             const newRent = await getRentById(rent.ID);
 
-            let frontUrl = process.env.FRONT_URL;
-            if (!frontUrl) {
-                if ((process.env.NODE_ENV || 'development') === 'development') {
-                    frontUrl = 'http://localhost:3000';
-                }
-            }
-
             let expireDate = newRent.Rent_Time;
             expireDate.setDate(expireDate.getDate() + newRent.Deadline);
-            const mailBody = readFileSync(
-                'template/assignContainer.html',
-                'utf8'
-            )
-                .replace('{name}', user.Name)
-                .replace('{expire}', expireDate.toLocaleDateString('zh-TW'))
-                .replace('{url}', `${frontUrl}/rentForm/${rent.ID}`);
-            sendMail(
+
+            sendRentAvailableEmail(
                 user.Email,
-                '【Monospace 植物租借管理系統】有新盆器可用',
-                mailBody
+                user.Name,
+                rent.ID,
+                expireDate.toLocaleDateString('zh-TW')
             );
 
             if (index >= emptyContainers.length) break;

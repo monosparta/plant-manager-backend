@@ -1,14 +1,15 @@
 import { getContainers, getEmptyContainers } from '../services/container';
 import { deletePlantByID, getPlant } from '../services/plant';
 import { deleteRentById, getAllRentData, getRentById, getWaitingRentData, markContainerTaken } from '../services/rent';
-import { unlinkSync, readFileSync } from 'fs';
+import { unlinkSync } from 'fs';
 import { join } from 'path';
 import { createUser, getUserFromEmail, getUserFromID } from '../services/user';
 import { createPassword } from '../services/randomPassword';
 import { randomUUID } from 'crypto';
 import { autoAssignContainer } from './rent';
-import { sendMail, validateEmail } from '../services/mailSender';
+import { validateEmail } from '../services/mailSender';
 import { roles } from '../middlewares/permission';
+import { sendAdminRegisterEmail } from '../services/mailTemplate';
 
 const getRentedList = async (req, res) => {
     return res.status(200).json({
@@ -117,24 +118,7 @@ const createAdminAccount = async (req, res) => {
         roles.admin
     );
 
-    let frontUrl = process.env.FRONT_URL;
-    if (!frontUrl) {
-        if ((process.env.NODE_ENV || 'development') === 'development') {
-            frontUrl = 'http://localhost:3000';
-        }
-    }
-
-    const mailBody = readFileSync('template/adminAdd.html', 'utf8')
-        .replace('{name}', user.Name)
-        .replace('{assigner}', assigner.Name)
-        .replace('{url}', `${frontUrl}/`)
-        .replace('{email}', user.Email)
-        .replace('{password}', password);
-    sendMail(
-        user.Email,
-        '【Monospace 植物租借管理系統】新增管理員通知',
-        mailBody
-    );
+    sendAdminRegisterEmail(user.Email, assigner.Name, user.Name, password);
 
     return res.status(200).json({
         message: 'Registration success'
