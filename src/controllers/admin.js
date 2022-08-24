@@ -117,9 +117,18 @@ const createAdminAccount = async (req, res) => {
         roles.admin
     );
 
+    let frontUrl = process.env.FRONT_URL;
+    if (!frontUrl) {
+        if ((process.env.NODE_ENV || 'development') === 'development') {
+            frontUrl = 'http://localhost:3000';
+        }
+    }
+
     const mailBody = readFileSync('template/adminAdd.html', 'utf8')
         .replace('{name}', user.Name)
         .replace('{assigner}', assigner.Name)
+        .replace('{url}', `${frontUrl}/`)
+        .replace('{email}', user.Email)
         .replace('{password}', password);
     sendMail(
         user.Email,
