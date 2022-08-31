@@ -3,8 +3,12 @@
 ## 系統需求  
 - Node.JS 16  
 - MySql 8  
+- Mosquitto
 - yarn  
 - pm2(選用)  
+
+## API 文件
+- 參見 [API.md](https://github.com/monosparta/rental-planter-backend/blob/doc/api/doc/API.md)
 
 ## 部屬  
 
