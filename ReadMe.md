@@ -8,7 +8,7 @@
 - pm2(選用)  
 
 ## API 文件
-- 參見 [API.md](https://github.com/monosparta/rental-planter-backend/blob/doc/api/doc/API.md)
+- 參見 [API.md](https://github.com/monosparta/rental-planter-backend/blob/main/doc/API.md)
 
 ## 部屬  
 
