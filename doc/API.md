@@ -7,10 +7,18 @@
 # Header
 ```json
 {
-  Auth: '', // JWT Token Generated from /user/login
-  Auth-Method: 'JWT'
+  "Auth": "",
+  "Auth-Method": "JWT"
 }
 ```
+
+## Header 參數
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|Auth|header|string|true|JWT Token Generated from /user/login|
+|Auth-Method|header|string|true|Needs to be "JWT"|
+
 
 # 目錄
 - [使用者 API](#user-api)
