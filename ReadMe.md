@@ -10,6 +10,9 @@
 ## API 文件
 - 參見 [API.md](https://github.com/monosparta/rental-planter-backend/blob/main/doc/API.md)
 
+## 資料庫 ER Model
+![ERModel](https://user-images.githubusercontent.com/10269287/188054625-69d28d64-bbcf-438b-90f7-9260b7eaab04.png)
+
 ## 部屬  
 
 1. 將本專案 Clone 下來  
