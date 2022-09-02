@@ -11,7 +11,7 @@ const transporter = nodeMailer.createTransport({
 });
 
 const sendMail = (to, subject, mailBody) => {
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.EMAIL_WHITELIST === '1') {
         if (!existsSync('./mailWhitelist.json')) writeFileSync('./mailWhitelist.json', '[]');
 
         const mailWhiteList = JSON.parse(

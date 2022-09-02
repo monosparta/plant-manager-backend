@@ -45,6 +45,7 @@ MQTT_PASSWORD="" # MQTT 密碼
 EMAIL_SERVICE="" # Email 服務 如： "gmail" 或 "hotmail"
 EMAIL_ACCOUNT="" # Email
 EMAIL_PASSWORD="" # Email 密碼（Gmail 需使用應用程式密碼）
+EMAIL_WHITELIST="1" # 將此變數設定為 1 啟用電子郵件白名單模式（Dev 環境建議啟用）
 ```
 
 選用環境變數（含預設值）：  
@@ -115,6 +116,7 @@ MQTT_TOPIC="Plant/Data" # MQTT 接收資料 Topic
 # WebSocket
 SOCKET_TOPIC="Plant/Data" # Socker 傳送資料 Topic
 SOCKET_REQ_DATA="lastData" # Socker 最後資料要求 Topic
+EMAIL_WHITELIST="1" # 將此變數設定為 1 啟用電子郵件白名單模式
 ```
 </details>
 
@@ -163,8 +165,12 @@ MQTT_TOPIC="Plant/Data" # MQTT 接收資料 Topic
 # WebSocket
 SOCKET_TOPIC="Plant/Data" # Socker 傳送資料 Topic
 SOCKET_REQ_DATA="lastData" # Socker 最後資料要求 Topic
+EMAIL_WHITELIST="1" # 將此變數設定為 1 啟用電子郵件白名單模式
 ```
 </details>
+
+> 如果有啟用電子郵件白名單，可將白名單電子郵件寫在根目錄的 `mailWhitelist.json` 內，格式為 string[]。在白名單內的電子郵件會寄出，否則輸出在 console 內。  
+> 假會員資料在 `fakeMemberShip.json`，程式第一次啟動會自動生成。
 
 4. 套用資料表  
 ```bash
