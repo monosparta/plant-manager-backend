@@ -1,5 +1,6 @@
 import nodeMailer from 'nodemailer';
 import { readFileSync, existsSync, writeFileSync } from 'fs';
+import { logger } from './logger';
 
 // create transporter for sending email
 const transporter = nodeMailer.createTransport({
@@ -18,7 +19,7 @@ const sendMail = (to, subject, mailBody) => {
             readFileSync('./mailWhitelist.json', { encoding: 'utf-8' })
         );
         if (!mailWhiteList.includes(to)) {
-            console.info(
+            logger.info(
                 `To: ${to}\nSubject: ${subject}\nContent:\n${mailBody}`
             );
             return;
@@ -35,8 +36,8 @@ const sendMail = (to, subject, mailBody) => {
 
     // call send email function
     transporter.sendMail(mailOptions, (err, info) => {
-        if(err) console.error(err);
-        if(info) console.info('Done sending!', { accepted: info.accepted, rejected: info.rejected });
+        if(err) logger.error(err);
+        if(info) logger.info('Done sending!', { accepted: info.accepted, rejected: info.rejected });
     });
 };
 

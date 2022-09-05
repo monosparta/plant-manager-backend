@@ -1,4 +1,5 @@
 import mqtt from 'mqtt';
+import { logger } from './logger';
 
 const lastData = {};
 const emitSocket = [];
@@ -26,7 +27,7 @@ const initSocketServer = (server) => {
      */
 
     client.on('connect', function () {
-        console.info('MQTT CONNECTION START');
+        logger.info('MQTT CONNECTION START');
         client.subscribe(process.env.MQTT_TOPIC || 'Plant/Data');
     });
 
@@ -36,7 +37,7 @@ const initSocketServer = (server) => {
         msg.time = new Date(msg.time[0], msg.time[1] - 1, msg.time[2], msg.time[3], msg.time[4], msg.time[5]);
 
         if (!lastData[msg.container_ID]) {
-            console.info(
+            logger.info(
                 `Container ${msg.container_ID} connected.`
             );
         }
@@ -83,7 +84,7 @@ const initSocketServer = (server) => {
             const valid = new Date(lastData[data].time);
             valid.setSeconds(valid.getSeconds() + lastData[data].valid);
             if (now > valid) {
-                console.info(
+                logger.info(
                     `Data of container ${lastData[data].container_ID} expired.`
                 );
                 emitData({
