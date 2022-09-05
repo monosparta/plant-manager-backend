@@ -72,3 +72,6 @@ public/uploads/
 
 # debug file
 debug/
+
+# sonarqube
+.scannerwork/
