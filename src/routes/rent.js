@@ -3,10 +3,10 @@ import { listOtherRents, registerRent, updatePlantInfo } from '../controllers/re
 const router = express.Router();
 
 import { verifyToken } from '../middlewares/authJWT';
-import { upload } from '../middlewares/formParser';
+import { handleFileUpload } from '../middlewares/formParser';
 
 router.get('/list/others', verifyToken, listOtherRents);
 router.post('/register', verifyToken, registerRent);
-router.post('/plantInfo', verifyToken, upload.single('image'), updatePlantInfo);
+router.post('/plantInfo', verifyToken, handleFileUpload, updatePlantInfo);
 
 export default router;
