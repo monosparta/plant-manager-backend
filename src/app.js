@@ -12,6 +12,9 @@ import { handleError } from './middlewares/errorHandler';
 
 const app = express();
 
+// Disable disclose technologies
+app.disable('x-powered-by');
+
 // Set Up Cors (with origin full access)
 app.use(cors({ credentials: true, origin: true }));
 
