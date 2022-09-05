@@ -5,6 +5,7 @@ import { logger } from './logger';
 // create transporter for sending email
 const transporter = nodeMailer.createTransport({
     service: process.env.EMAIL_SERVICE,
+    secured: true,
     auth: {
         user: process.env.EMAIL_ACCOUNT,
         pass: process.env.EMAIL_PASSWORD
