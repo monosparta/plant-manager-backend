@@ -7,15 +7,7 @@ import 'express-async-errors';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const env = process.env.NODE_ENV || 'development';
-
-// replace logger
-import { Logger } from 'tslog';
-new Logger({
-    name: 'console',
-    overwriteConsole: true,
-    minLevel: env === 'development' ? 'silly' : 'info'
-});
+import { logger } from '../services/logger';
 
 import app from '../app';
 import debugLib from 'debug';
@@ -80,11 +72,11 @@ function onError (error) {
     // handle specific listen errors with friendly messages
     switch (error.code) {
         case 'EACCES':
-            console.error(bind + ' requires elevated privileges');
+            logger.error(`${bind} requires elevated privileges`);
             process.exit(1);
             break;
         case 'EADDRINUSE':
-            console.error(bind + ' is already in use');
+            logger.error(`${bind} is already in use`);
             process.exit(1);
             break;
         default:
@@ -99,6 +91,6 @@ function onError (error) {
 function onListening () {
     const addr = server.address();
     const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
-    debug('Listening on ' + bind);
-    console.info('Server ready!');
+    debug(`Listening on ${bind}`);
+    logger.info('Server ready!');
 }
