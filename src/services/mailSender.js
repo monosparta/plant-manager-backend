@@ -35,7 +35,7 @@ const sendMail = (to, subject, mailBody) => {
 
     // call send email function
     transporter.sendMail(mailOptions, (err, info) => {
-        if(err) console.console.error();(err);
+        if(err) console.error(err);
         if(info) console.info('Done sending!', { accepted: info.accepted, rejected: info.rejected });
     });
 };
