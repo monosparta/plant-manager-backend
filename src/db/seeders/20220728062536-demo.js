@@ -57,8 +57,7 @@ module.exports = {
      *   name: 'John Doe',
      *   isBetaMember: false
      * }], {});
-     */
-    console.log(Sequelize.model)
+  */
     const users = [];
     for (let x = 1; x <= 10; ++x) {
       users.push(generateUserData());

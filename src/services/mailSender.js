@@ -18,7 +18,7 @@ const sendMail = (to, subject, mailBody) => {
             readFileSync('./mailWhitelist.json', { encoding: 'utf-8' })
         );
         if (!mailWhiteList.includes(to)) {
-            console.log(
+            console.info(
                 `To: ${to}\nSubject: ${subject}\nContent:\n${mailBody}`
             );
             return;
@@ -35,8 +35,8 @@ const sendMail = (to, subject, mailBody) => {
 
     // call send email function
     transporter.sendMail(mailOptions, (err, info) => {
-        if(err) console.log(err);
-        // if(info) console.log(`Done sending!, time: ${timeStr}`, info);
+        if(err) console.console.error();(err);
+        if(info) console.info('Done sending!', { accepted: info.accepted, rejected: info.rejected });
     });
 };
 

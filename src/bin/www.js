@@ -6,6 +6,17 @@
 import 'express-async-errors';
 import dotenv from 'dotenv';
 dotenv.config();
+
+const env = process.env.NODE_ENV || 'development';
+
+// replace logger
+import { Logger } from 'tslog';
+new Logger({
+    name: 'console',
+    overwriteConsole: true,
+    minLevel: env === 'development' ? 'silly' : 'info'
+});
+
 import app from '../app';
 import debugLib from 'debug';
 import http from 'http';
@@ -89,5 +100,5 @@ function onListening () {
     const addr = server.address();
     const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
     debug('Listening on ' + bind);
-    console.log('Server ready!');
+    console.info('Server ready!');
 }
