@@ -1,5 +1,5 @@
 import nodeMailer from 'nodemailer';
-import { readFileSync, existsSync, writeFileSync } from 'fs';
+import { readFileSync, existsSync, writeFileSync, mkdirSync } from 'fs';
 import { logger } from './logger';
 
 // create transporter for sending email
@@ -12,17 +12,21 @@ const transporter = nodeMailer.createTransport({
     }
 });
 
+// Create fake inbox for non-whitelist emails
+if (!existsSync('./fakeInbox')) {
+    mkdirSync('./fakeInbox');
+}
+
 const sendMail = (to, subject, mailBody) => {
-    if (process.env.EMAIL_WHITELIST === '1') {
+    if (process.env.EMAIL_WHITELIST === '1' || process.env.NODE_ENV === 'test') {
         if (!existsSync('./mailWhitelist.json')) writeFileSync('./mailWhitelist.json', '[]');
 
         const mailWhiteList = JSON.parse(
             readFileSync('./mailWhitelist.json', { encoding: 'utf-8' })
         );
         if (!mailWhiteList.includes(to)) {
-            logger.info(
-                `To: ${to}\nSubject: ${subject}\nContent:\n${mailBody}`
-            );
+            const now = new Date();
+            writeFileSync(`./fakeInbox/${now.toISOString()}-${to}-${subject}.html`, mailBody);
             return;
         }
     }
