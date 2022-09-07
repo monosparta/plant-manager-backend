@@ -69,6 +69,7 @@ const register = async (req, res) => {
     }
 
     let member;
+    /* istanbul ignore next */
     if (process.env.NODE_ENV === 'production') {
         // TODO: Query monospace member
     } else {

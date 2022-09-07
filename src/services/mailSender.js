@@ -19,6 +19,7 @@ if (!existsSync('./fakeInbox')) {
 
 const sendMail = (to, subject, mailBody) => {
     if (process.env.EMAIL_WHITELIST === '1' || process.env.NODE_ENV === 'test') {
+        /* istanbul ignore next */
         if (!existsSync('./mailWhitelist.json')) writeFileSync('./mailWhitelist.json', '[]');
 
         const mailWhiteList = JSON.parse(
@@ -40,6 +41,7 @@ const sendMail = (to, subject, mailBody) => {
     };
 
     // call send email function
+    /* istanbul ignore next */
     transporter.sendMail(mailOptions, (err, info) => {
         if(err) logger.error(err);
         if(info) logger.info('Done sending!', { accepted: info.accepted, rejected: info.rejected });

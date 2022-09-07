@@ -2,6 +2,7 @@ import { readFileSync } from 'fs';
 import { sendMail } from './mailSender';
 
 let frontUrl = process.env.FRONT_URL;
+/* istanbul ignore next */
 if (!frontUrl) {
     if ((process.env.NODE_ENV || 'development') === 'development') {
         frontUrl = 'http://localhost:3000';

@@ -30,7 +30,8 @@ module.exports = {
         '/node_modules/',
         '/config/',
         '/src/bin',
-        '/src/db/'
+        '/src/db/',
+        '/test/'
     ],
 
     // Indicates which provider should be used to instrument code for coverage
