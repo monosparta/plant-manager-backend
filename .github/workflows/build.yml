@@ -12,6 +12,7 @@ jobs:
     name: Build and Test
     runs-on: ubuntu-latest
     env:
+      NODE_ENV: test
       CI_DB_USERNAME: root
       CI_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       JWT_SECRECT: ${{ secrets.JWT_SECRECT }}
