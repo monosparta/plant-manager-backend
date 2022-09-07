@@ -26,7 +26,7 @@ jobs:
       EMAIL_SERVICE: ${{ secrets.EMAIL_SERVICE }}
       EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
       EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-      EMAIL_WHITELIST: ${{ secrets.EMAIL_WHITELIST }}
+      EMAIL_WHITELIST: 1
     steps:
       - name: Install dependencies
         run: yarn
@@ -42,7 +42,7 @@ jobs:
         run: yarn test
 
   sonarcloud:
-    needs: checkout
+    needs: build
     name: SonarCloud
     runs-on: ubuntu-latest
     steps:
