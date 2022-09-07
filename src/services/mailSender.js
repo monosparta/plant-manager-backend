@@ -18,6 +18,7 @@ if (!existsSync('./fakeInbox')) {
 }
 
 const sendMail = (to, subject, mailBody) => {
+    /* istanbul ignore next */
     if (process.env.EMAIL_WHITELIST === '1' || process.env.NODE_ENV === 'test') {
         /* istanbul ignore next */
         if (!existsSync('./mailWhitelist.json')) writeFileSync('./mailWhitelist.json', '[]');
