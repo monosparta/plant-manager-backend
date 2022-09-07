@@ -7,7 +7,7 @@ let token;
 beforeAll(async () => {
     const res = await request(app)
         .post('/api/user/login')
-        .send({ email: 'Jeanne_Ondricka@gmail.com', password: 'demo' });
+        .send({ email: 'Eula_Ritchie@hotmail.com', password: 'demo' });
     token = res.body.token;
 });
 
@@ -67,7 +67,7 @@ describe('Test user filling rent form', () => {
             .post('/api/rent/plantInfo')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
-            .field('rent', readLatestRentId('Jeanne_Ondricka@gmail.com'))
+            .field('rent', readLatestRentId('Eula_Ritchie@hotmail.com'))
             .field('name', 'test')
             .field('intro', 'test\ntest')
             .field('nickname', 'test-nick')
@@ -112,7 +112,7 @@ describe('Test user filling rent form', () => {
             .post('/api/rent/plantInfo')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
-            .field('rent', readLatestRentId('Jeanne_Ondricka@gmail.com'))
+            .field('rent', readLatestRentId('Eula_Ritchie@hotmail.com'))
             .field('name', 'test')
             .field('intro', 'test\ntest')
             .field('nickname', 'test-nick')
@@ -126,7 +126,7 @@ describe('Test user filling rent form', () => {
             .post('/api/rent/plantInfo')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
-            .field('rent', readLatestRentId('Jeanne_Ondricka@gmail.com'))
+            .field('rent', readLatestRentId('Eula_Ritchie@hotmail.com'))
             .field('name', 'test')
             .field('intro', 'test\ntest')
             .field('nickname', 'test-nick')
@@ -140,7 +140,7 @@ describe('Test user filling rent form', () => {
             .post('/api/rent/plantInfo')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
-            .field('rent', readLatestRentId('Jeanne_Ondricka@gmail.com'))
+            .field('rent', readLatestRentId('Eula_Ritchie@hotmail.com'))
             .field('name', 'test')
             .field('intro', 'test\ntest')
             .field('nickname', 'test-nick')
@@ -157,7 +157,7 @@ describe('Test user filling rent form', () => {
             .post('/api/rent/plantInfo')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
-            .field('rent', readLatestRentId('Jeanne_Ondricka@gmail.com'))
+            .field('rent', readLatestRentId('Eula_Ritchie@hotmail.com'))
             .field('name', 'test')
             .field('intro', 'test\ntest')
             .field('nickname', 'test-nick')
@@ -166,6 +166,24 @@ describe('Test user filling rent form', () => {
             .expect(409)
             .then((res) => {
                 expect(res.body.message).toBe('Plant already exist');
+            });
+    });
+});
+
+describe('Test file delete', () => {
+    test('It should proceed admin delete rent request sent by admin.', async () => {
+        const res = await request(app)
+            .post('/api/user/login')
+            .send({ email: 'Jeanne_Ondricka@gmail.com', password: 'demo' });
+        const adminToken = res.body.token;
+
+        return request(app)
+            .delete(`/api/admin/rent/${readLatestRentId('Eula_Ritchie@hotmail.com')}`)
+            .set('Auth-Method', 'JWT')
+            .set('Auth', adminToken)
+            .expect(200)
+            .then((res) => {
+                expect(res.body.message).toBe('Delete successful');
             });
     });
 });

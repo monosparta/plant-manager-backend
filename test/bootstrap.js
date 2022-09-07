@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import { renameSync, writeFileSync, existsSync } from 'fs';
 import { randomUUID } from 'crypto';
 
