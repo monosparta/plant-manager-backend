@@ -1,15 +1,22 @@
 import request from 'supertest';
+import { existsSync, unlinkSync } from 'fs';
+import { join } from 'path';
 import app from '../../src/app';
 import { readLatestRentId } from '../util/mailReader';
 
-let token;
+let token, adminToken;
 let otherRentsCount = 2;
 
 beforeAll(async () => {
-    const res = await request(app)
+    const resUser = await request(app)
         .post('/api/user/login')
         .send({ email: 'Eula_Ritchie@hotmail.com', password: 'demo' });
-    token = res.body.token;
+    token = resUser.body.token;
+
+    const resAdmin = await request(app)
+        .post('/api/user/login')
+        .send({ email: 'Jeanne_Ondricka@gmail.com', password: 'demo' });
+    adminToken = resAdmin.body.token;
 });
 
 describe('Test user rent list', () => {
@@ -58,6 +65,29 @@ describe('Test user rent request', () => {
             .then((res) => {
                 expect(res.body.message).toBe('Registration successful');
                 expect(res.body.waiting).toBe(true);
+            });
+    });
+    test('It should have user rents not empty.', () => {
+        return request(app)
+            .get('/api/user')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(200)
+            .then((res) => {
+                expect(res.body.message).toBe('Query Success');
+                expect(res.body.rents.length).not.toBe(0);
+            });
+    });
+
+    test('It should have waitlist not empty for admin.', () => {
+        return request(app)
+            .get('/api/admin/waitList')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', adminToken)
+            .expect(200)
+            .then((res) => {
+                expect(res.body.message).toBe('Query Success');
+                expect(res.body.data.length).not.toBe(0);
             });
     });
 });
@@ -183,14 +213,70 @@ describe('Test user filling rent form', () => {
 });
 
 describe('Test file delete', () => {
-    test('It should proceed admin delete rent request sent by admin.', async () => {
-        const res = await request(app)
-            .post('/api/user/login')
-            .send({ email: 'Jeanne_Ondricka@gmail.com', password: 'demo' });
-        const adminToken = res.body.token;
-
+    test('It should proceed rent delete with plant data.', async () => {
         return request(app)
             .delete(`/api/admin/rent/${readLatestRentId('Eula_Ritchie@hotmail.com')}`)
+            .set('Auth-Method', 'JWT')
+            .set('Auth', adminToken)
+            .expect(200)
+            .then((res) => {
+                expect(res.body.message).toBe('Delete successful');
+            });
+    });
+
+    test('It should proceed rent delete without plant data.', async () => {
+        return request(app)
+            .delete(
+                `/api/admin/rent/${readLatestRentId(
+                    'Eula_Ritchie@hotmail.com'
+                )}`
+            )
+            .set('Auth-Method', 'JWT')
+            .set('Auth', adminToken)
+            .expect(200)
+            .then((res) => {
+                expect(res.body.message).toBe('Delete successful');
+            });
+    });
+
+    test('It should proceed rent delete with deleted image.', async () => {
+        await request(app)
+            .post('/api/rent/register')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token);
+
+        const rentId = readLatestRentId('Eula_Ritchie@hotmail.com');
+
+        await request(app)
+            .post('/api/rent/plantInfo')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .field('rent', rentId)
+            .field('name', 'test')
+            .field('intro', 'test\ntest')
+            .field('nickname', 'test-nick')
+            .field('minHumid', 20)
+            .attach('image', `${__dirname}/../files/image.jpg`);
+
+        const userData = await request(app)
+            .get('/api/user')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token);
+
+        const rent = userData.body.rents.find(x => x.id.toString() === rentId);
+
+        if (rent.plant.imgPath.startsWith('uploads/')) {
+            if (existsSync(join('./public', rent.plant.imgPath))) {
+                unlinkSync(join('./public', rent.plant.imgPath));
+            }
+        }
+
+        return request(app)
+            .delete(
+                `/api/admin/rent/${readLatestRentId(
+                    'Eula_Ritchie@hotmail.com'
+                )}`
+            )
             .set('Auth-Method', 'JWT')
             .set('Auth', adminToken)
             .expect(200)
