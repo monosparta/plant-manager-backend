@@ -36,11 +36,6 @@ jobs:
         run: yarn migrate:up
       - name: Test and coverage
         run: yarn test
-      - name: Upload-Artifact (build)
-        uses: actions/upload-artifact@v3
-        with:
-          name: build
-          path: dist/
       - name: Upload-Artifact (coverage)
         uses: actions/upload-artifact@v3
         with:
