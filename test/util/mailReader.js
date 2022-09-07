@@ -1,3 +1,4 @@
+// Only for testing
 import { readFileSync, statSync, readdirSync } from 'fs';
 import { join } from 'path';
 
@@ -24,4 +25,12 @@ const readLatestPassword = email => {
     return mailContent.match(passwordRegex).groups.password;
 };
 
-export { readLatestPassword };
+const readLatestRentId = email => {
+    const mailContent = readFileSync(join('./fakeInbox', getNewestFile('./fakeInbox', email))).toString();
+
+    const rentIdRegex = /(rentForm\/)(?<rentId>\d+)( )/;
+
+    return mailContent.match(rentIdRegex).groups.rentId;
+};
+
+export { readLatestPassword, readLatestRentId };
