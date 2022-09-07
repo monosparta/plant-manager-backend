@@ -1,4 +1,4 @@
-name: Build
+name: SonarCloud
 on:
   push:
     branches:
@@ -8,13 +8,44 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
+  checkout:
+    name: Checkout
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    env:
+      CI_DB_USERNAME: root
+      CI_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      JWT_SECRECT: ${{ secrets.JWT_SECRECT }}
+      EMAIL_SERVICE: ${{ secrets.EMAIL_SERVICE }}
+      EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
+      EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+      EMAIL_WHITELIST: ${{ secrets.EMAIL_WHITELIST }}
+    steps:
+      - name: Install dependencies
+        run: yarn
+      - name: Set up MySQL 8
+        uses: mirromutth/mysql-action@master
+        with:
+          mysql version: 8.0
+          mysql database: rental-planter
+          mysql root password: ${{ secrets.DB_PASSWORD }}
+      - name: Install dependencies
+        run: yarn migrate:up
+      - name: Test and coverage
+        run: yarn test
+
   sonarcloud:
+    needs: checkout
     name: SonarCloud
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
