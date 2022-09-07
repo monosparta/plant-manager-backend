@@ -62,10 +62,10 @@ module.exports = {
     // forceCoverageMatch: [],
 
     // A path to a module which exports an async function that is triggered once before all test suites
-    // globalSetup: undefined,
+    globalSetup: './test/bootstrap.js',
 
     // A path to a module which exports an async function that is triggered once after all test suites
-    // globalTeardown: undefined,
+    globalTeardown: './test/teardown.js',
 
     // A set of global variables that need to be available in all test environments
     // globals: {},
@@ -138,7 +138,7 @@ module.exports = {
     // setupFiles: [],
 
     // A list of paths to modules that run some code to configure or set up the testing framework before each test
-    setupFilesAfterEnv: ['./test/postTest.js']
+    setupFilesAfterEnv: ['./test/postTest.js'],
 
     // The number of seconds after which a test is considered as slow and reported as such in the results.
     // slowTestThreshold: 5,
@@ -188,7 +188,7 @@ module.exports = {
     // unmockedModulePathPatterns: undefined,
 
     // Indicates whether each individual test should be reported during the run
-    // verbose: undefined,
+    verbose: true
 
     // An array of regexp patterns that are matched against all source file paths before re-running tests in watch mode
     // watchPathIgnorePatterns: [],
