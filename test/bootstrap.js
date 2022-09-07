@@ -1,8 +1,41 @@
 import { renameSync, writeFileSync, existsSync } from 'fs';
+import { randomUUID } from 'crypto';
 
 export default () => {
-    if (existsSync('./fakeMemberShip.json')) renameSync('./fakeMemberShip.json', './fakeMemberShip.backup.json');
-    if (existsSync('./mailWhitelist.json')) renameSync('./mailWhitelist.json', './mailWhitelist.backup.json');
+    if (existsSync('./fakeMemberShip.backup.json')) {
+        console.warn(
+            '(fakeMemberShip.backup.json) Seems like last test is not ended correctly, backup file has been backed up.'
+        );
+        renameSync(
+            './fakeMemberShip.backup.json',
+            `./fakeMemberShip.backup.${randomUUID()}.json`
+        );
+    }
+    if (existsSync('./mailWhitelist.backup.json')) {
+        console.warn(
+            '(mailWhitelist.backup.json) Seems like last test is not ended correctly, backup file has been backed up.'
+        );
+        renameSync(
+            './mailWhitelist.backup.json',
+            `./mailWhitelist.backup.${randomUUID()}.json`
+        );
+    }
+    if (existsSync('./fakeInbox.backup')) {
+        console.warn(
+            '(fakeInbox.backup) Seems like last test is not ended correctly, backup file has been backed up.'
+        );
+        renameSync('./fakeInbox.backup', `./fakeInbox.backup.${randomUUID()}`);
+    }
+
+    if (existsSync('./fakeMemberShip.json')) {
+        renameSync('./fakeMemberShip.json', './fakeMemberShip.backup.json');
+    }
+    if (existsSync('./mailWhitelist.json')) {
+        renameSync('./mailWhitelist.json', './mailWhitelist.backup.json');
+    }
+    if (existsSync('./fakeInbox')) {
+        renameSync('./fakeInbox', './fakeInbox.backup');
+    }
 
     const membership = [
         {
@@ -20,7 +53,7 @@ export default () => {
     const memberJson = JSON.stringify(membership, null, 4);
     writeFileSync('./fakeMemberShip.json', memberJson, 'utf8');
 
-    const mailWhiteList = [];
+    const mailWhiteList = [process.env.EMAIL_ACCOUNT];
 
     const mailWhiteListJson = JSON.stringify(mailWhiteList, null, 4);
     writeFileSync('./mailWhitelist.json', mailWhiteListJson, 'utf8');

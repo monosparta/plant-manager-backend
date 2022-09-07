@@ -64,11 +64,9 @@ typings/
 dist/
 
 # fake data 
-fakeMemberShip.json
-fakeMemberShip.backup.json
-mailWhitelist.json
-mailWhitelist.backup.json
-fakeInbox/
+fakeMemberShip*.json
+mailWhitelist*.json
+fakeInbox*/
 
 # uploaded images
 public/uploads/
