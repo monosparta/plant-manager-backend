@@ -3,6 +3,7 @@ import app from '../../src/app';
 import { readLatestRentId } from '../util/mailReader';
 
 let token;
+let otherRentsCount = 2;
 
 beforeAll(async () => {
     const res = await request(app)
@@ -19,6 +20,7 @@ describe('Test user rent list', () => {
             .set('Auth', token)
             .expect(200)
             .then((res) => {
+                otherRentsCount = res.body.data.length;
                 expect(res.body.message).toBe('Query Success');
             });
     });
@@ -37,7 +39,17 @@ describe('Test user rent request', () => {
             });
     });
 
-    test('It should proceed the rent request and add to waiting list.', () => {
+    test('It should proceed the rent request and add to waiting list.', async () => {
+        // make sure rent is enough to be in waiting list
+        if (otherRentsCount !== 2) {
+            for (let i = otherRentsCount; i < otherRentsCount; ++i) {
+                await request(app)
+                    .post('/api/rent/register')
+                    .set('Auth-Method', 'JWT')
+                    .set('Auth', token);
+            }
+        }
+
         return request(app)
             .post('/api/rent/register')
             .set('Auth-Method', 'JWT')
