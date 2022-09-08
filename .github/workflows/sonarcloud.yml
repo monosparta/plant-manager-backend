@@ -9,8 +9,9 @@ on:
     types: [opened, synchronize, reopened]
 jobs:
   build:
-    name: Build and Test
+    name: Test
     runs-on: ubuntu-latest
+    environment: test
     env:
       NODE_ENV: test
       CI_DB_USERNAME: root
@@ -32,9 +33,9 @@ jobs:
           mysql root password: ${{ secrets.DB_PASSWORD }}
       - name: Install dependencies
         run: yarn
-      - name: Apply database
+      - name: Apply database for testing
         run: yarn migrate:up
-      - name: Test and coverage
+      - name: Test and generate coverage
         run: yarn test
       - name: Upload-Artifact (coverage)
         uses: actions/upload-artifact@v3
