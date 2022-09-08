@@ -29,25 +29,32 @@ const initSocketServer = (server) => {
     client.on('connect', function () {
         logger.info('MQTT CONNECTION START');
         client.subscribe(process.env.MQTT_TOPIC || 'Plant/Data');
+        client.subscribe(process.env.MQTT_ERROR_TOPIC || 'Plant/Error');
     });
 
 
     client.on('message', function (topic, payload) {
-        const msg = JSON.parse(payload.toString());
-        msg.time = new Date(msg.time[0], msg.time[1] - 1, msg.time[2], msg.time[3], msg.time[4], msg.time[5]);
 
-        if (!lastData[msg.container_ID]) {
-            logger.info(
-                `Container ${msg.container_ID} connected.`
-            );
+        if (topic === (process.env.MQTT_TOPIC || 'Plant/Data')) {
+            const msg = JSON.parse(payload.toString());
+            msg.time = new Date(msg.time[0], msg.time[1] - 1, msg.time[2], msg.time[3], msg.time[4], msg.time[5]);
+
+            if (!lastData[msg.container_ID]) {
+                logger.info(
+                    `Container ${msg.container_ID} connected.`
+                );
+            }
+            lastData[msg.container_ID] = msg;
+
+            emitData({
+                light: msg.light,
+                soilHumid: msg.soil_humi,
+                container: msg.container_ID
+            });
+        } else if (topic === (process.env.MQTT_ERROR_TOPIC || 'Plant/Error')) {
+            const msg = JSON.parse(payload.toString());
+            logger.error(`Container ${msg.container_ID} sent error:`, msg.errors);
         }
-        lastData[msg.container_ID] = msg;
-
-        emitData({
-            light: msg.light,
-            soilHumid: msg.soil_humi,
-            container: msg.container_ID
-        });
     });
 
     /**
