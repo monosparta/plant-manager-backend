@@ -7,10 +7,12 @@ const exCharacters = '!@#$%^&*_-=+';
 const createPassword =  (length, hasNumbers = true, hasSymbols = true) => {
     let chars = alpha;
 
+    /* istanbul ignore next */
     if (hasNumbers) {
         chars += integers;
     }
 
+    /* istanbul ignore next */
     if (hasSymbols) {
         chars += exCharacters;
     }

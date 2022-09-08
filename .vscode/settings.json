@@ -2,6 +2,7 @@
     "conventionalCommits.scopes": [
         "Express",
         "Database",
-        "websocket"
+        "websocket",
+        "Test"
     ]
 }
