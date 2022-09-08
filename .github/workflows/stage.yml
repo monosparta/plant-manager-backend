@@ -38,12 +38,11 @@ jobs:
     needs: build
     name: Deploy update on remote
     runs-on: [self-hosted, stage]
+    defaults:
+      run:
+        working-directory: ${{ secrets.DEPLOY_PATH }}
     environment: stage
     steps:
-      - name: Switch Directory
-        run: |
-          cd ${{ secrets.DEPLOY_PATH }}
-          ls
       - name: Make sure branch is correct
         run: git checkout stage
       - name: Pull change
