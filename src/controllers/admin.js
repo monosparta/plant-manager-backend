@@ -1,7 +1,7 @@
 import { getContainers, getEmptyContainers } from '../services/container';
 import { deletePlantByID, getPlant } from '../services/plant';
 import { deleteRentById, getAllRentData, getRentById, getWaitingRentData, markContainerTaken } from '../services/rent';
-import { unlinkSync } from 'fs';
+import { unlinkSync, existsSync } from 'fs';
 import { join } from 'path';
 import { createUser, getUserFromEmail, getUserFromID } from '../services/user';
 import { createPassword } from '../services/randomPassword';
@@ -71,7 +71,11 @@ const deleteRent = async (req, res) => {
 
     const plant = await getPlant(rent.Plant_ID);
     if (plant) {
-        unlinkSync(join('public/', plant.Img_Path));
+        if (plant.Img_Path.startsWith('uploads/')) {
+            if (existsSync(join('./public', plant.Img_Path))) {
+                unlinkSync(join('./public', plant.Img_Path));
+            }
+        }
         deletePlantByID(plant.ID);
     }
 
