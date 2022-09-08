@@ -1,0 +1,77 @@
+name: Deploy(Stage)
+on:
+  push:
+   branches:
+     - stage
+jobs:
+  build:
+    name: Check Quality
+    runs-on: ubuntu-latest
+    environment: test
+    env:
+      NODE_ENV: test
+      CI_DB_USERNAME: root
+      CI_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      JWT_SECRECT: ${{ secrets.JWT_SECRECT }}
+      EMAIL_SERVICE: ${{ secrets.EMAIL_SERVICE }}
+      EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
+      EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+      EMAIL_WHITELIST: 1
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up MySQL 8
+        uses: mirromutth/mysql-action@master
+        with:
+          mysql version: 8.0
+          mysql database: rental-planter
+          mysql root password: ${{ secrets.DB_PASSWORD }}
+      - name: Install dependencies
+        run: yarn
+      - name: Apply database for testing
+        run: yarn migrate:up
+      - name: Run Test
+        run: yarn test
+
+  deploy:
+    needs: build
+    name: Deploy
+    runs-on: [self-hosted, stage]
+    environment: stage
+    steps:
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }} 
+          known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
+      - name: Add Known Hosts
+        run: ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: yarn
+      - name: Build
+        run: yarn build:clean
+      - name: Set Up Environment Variable
+        run: |
+          echo NODE_ENV="stage" > .env
+          echo >> .env
+          echo STAGE_DB_USERNAME="${{ secrets.STAGE_DB_USERNAME }}" >> .env
+          echo STAGE_DB_PASSWORD="${{ secrets.STAGE_DB_PASSWORD }}" >> .env
+          echo >> .env
+          echo JWT_SECRECT="${{ secrets.JWT_SECRECT }}" >> .env
+          echo >> .env
+          echo FRONT_URL="${{ secrets.FRONT_URL }}" >> .env
+          echo >> .env
+          echo MQTT_USERNAME="${{ secrets.MQTT_USERNAME }}" >> .env
+          echo MQTT_PASSWORD="${{ secrets.MQTT_PASSWORD }}" >> .env
+          echo >> .env
+          echo EMAIL_SERVICE="${{ secrets.EMAIL_SERVICE }}" >> .env
+          echo EMAIL_ACCOUNT="${{ secrets.EMAIL_ACCOUNT }}" >> .env
+          echo EMAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}" >> .env
+      - name: Copy to build path
+        run: rsync -avzh config/ dist/ public/ template/ .env .sequelizerc ecosystem.config.json nodemon.json package.json yarn.lock ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.BACKEND_DEPLOY_PATH }}
+      - name: Install dependencies on remote
+        run: ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "cd ${{ secrets.DEPLOY_PATH }};yarn"
+      - name: Start Server
+        run: ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "cd ${{ secrets.DEPLOY_PATH }};pm2 reload ecosystem.config.json"
