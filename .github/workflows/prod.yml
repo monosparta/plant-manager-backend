@@ -1,8 +1,8 @@
-name: Deploy(Stage)
+name: Deploy(Prod)
 on:
   push:
    branches:
-     - stage
+     - main
 jobs:
   build:
     name: Check runtime quality
@@ -38,13 +38,13 @@ jobs:
   deploy:
     needs: build
     name: Deploy update on remote
-    runs-on: [self-hosted, stage]
-    environment: stage
+    runs-on: [self-hosted, prod]
+    environment: prod
     steps:
       - name: Update files
         run: |
           cd ${{ secrets.DEPLOY_PATH }}
-          git checkout stage
+          git checkout main
           git pull --rebase=true
       - name: Stop server if running
         run: |
@@ -61,10 +61,12 @@ jobs:
       - name: Set up environment variable
         run: |
           cd ${{ secrets.DEPLOY_PATH }}
-          echo NODE_ENV=\"stage\" > .env
+          echo NODE_ENV=\"production\" > .env
           echo >> .env
-          echo STAGE_DB_USERNAME=\"${{ secrets.STAGE_DB_USERNAME }}\" >> .env
-          echo STAGE_DB_PASSWORD=\"${{ secrets.STAGE_DB_PASSWORD }}\" >> .env
+          echo PROD_DB_HOSTNAME=\"${{ secrets.PROD_DB_HOSTNAME }}\" >> .env
+          echo PROD_DB_PORT=\"${{ secrets.PROD_DB_PORT }}\" >> .env
+          echo PROD_DB_USERNAME=\"${{ secrets.PROD_DB_USERNAME }}\" >> .env
+          echo PROD_DB_PASSWORD=\"${{ secrets.PROD_DB_PASSWORD }}\" >> .env
           echo >> .env
           echo JWT_SECRECT=\"${{ secrets.JWT_SECRECT }}\" >> .env
           echo >> .env
