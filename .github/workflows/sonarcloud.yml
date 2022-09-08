@@ -9,7 +9,7 @@ on:
     types: [opened, synchronize, reopened]
 jobs:
   build:
-    name: Test
+    name: Generate test coverage
     runs-on: ubuntu-latest
     environment: test
     env:
@@ -22,7 +22,8 @@ jobs:
       EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
       EMAIL_WHITELIST: 1
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Set up MySQL 8
@@ -35,9 +36,9 @@ jobs:
         run: yarn
       - name: Apply database for testing
         run: yarn migrate:up
-      - name: Test and generate coverage
+      - name: Runtime test and generate coverage
         run: yarn test
-      - name: Upload-Artifact (coverage)
+      - name: Upload artifact (coverage)
         uses: actions/upload-artifact@v3
         with:
           name: coverage
@@ -48,14 +49,16 @@ jobs:
     name: SonarCloud
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - uses: actions/download-artifact@v3
+      - name: Download artifact (coverage)
+        uses: actions/download-artifact@v3
         with:
           name: coverage
           path: coverage/
-      - name: SonarCloud Scan
+      - name: SonarCloud scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any

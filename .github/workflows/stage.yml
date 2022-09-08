@@ -5,7 +5,7 @@ on:
      - stage
 jobs:
   build:
-    name: Check Quality
+    name: Check runtime quality
     runs-on: ubuntu-latest
     environment: test
     env:
@@ -18,7 +18,8 @@ jobs:
       EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
       EMAIL_WHITELIST: 1
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Set up MySQL 8
@@ -31,7 +32,7 @@ jobs:
         run: yarn
       - name: Apply database for testing
         run: yarn migrate:up
-      - name: Run Test
+      - name: Runtime test
         run: yarn test
 
   deploy:
@@ -40,7 +41,7 @@ jobs:
     runs-on: [self-hosted, stage]
     environment: stage
     steps:
-      - name: Update Files
+      - name: Update files
         run: |
           cd ${{ secrets.DEPLOY_PATH }}
           git checkout stage
@@ -57,7 +58,7 @@ jobs:
         run: |
           cd ${{ secrets.DEPLOY_PATH }}
           yarn build:clean
-      - name: Set Up Environment Variable
+      - name: Set up environment variable
         run: |
           cd ${{ secrets.DEPLOY_PATH }}
           echo NODE_ENV=\"stage\" > .env
@@ -75,7 +76,7 @@ jobs:
           echo EMAIL_SERVICE=\"${{ secrets.EMAIL_SERVICE }}\" >> .env
           echo EMAIL_ACCOUNT=\"${{ secrets.EMAIL_ACCOUNT }}\" >> .env
           echo EMAIL_PASSWORD=\"${{ secrets.EMAIL_PASSWORD }}\" >> .env
-      - name: Start Server
+      - name: Start server
         run: |
           cd ${{ secrets.DEPLOY_PATH }}
           pm2 reload ecosystem.config.json
