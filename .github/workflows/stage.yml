@@ -44,7 +44,7 @@ jobs:
         run: |
           cd ${{ secrets.DEPLOY_PATH }}
           git checkout stage
-          git pull
+          git pull --rebase=true
       - name: Stop server if running
         run: |
           cd ${{ secrets.DEPLOY_PATH }}
