@@ -41,7 +41,9 @@ jobs:
     environment: stage
     steps:
       - name: Switch Directory
-        run: cd ${{ secrets.DEPLOY_PATH }}
+        run: |
+          cd ${{ secrets.DEPLOY_PATH }}
+          ls
       - name: Make sure branch is correct
         run: git checkout stage
       - name: Pull change
