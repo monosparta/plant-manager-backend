@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 
-const membership = [];
-
 const readOrCreateFakeMember = () => {
+    const membership = [];
+
     /* istanbul ignore next */
     if (!existsSync('./fakeMemberShip.json')) return generateFakeMember(5);
 
@@ -16,27 +16,39 @@ const readOrCreateFakeMember = () => {
         return generateFakeMember(5);
     }
 
+    let changed = false;
     for (const member of membershipRaw) {
+        let { uuid } = member;
+        const { name, email } = member;
+
         /* istanbul ignore next */
-        if (!member.ID || !member.name || !member.email) {
+        if (!uuid && member.ID) {
+            uuid = member.ID;
+            changed = true;
+        }
+        /* istanbul ignore next */
+        if (!uuid || !name || !email) {
             return generateFakeMember(5);
         }
-        membership.push({
-            ID: member.ID,
-            name: member.name,
-            email: member.email
-        });
+        membership.push({ uuid, name, email });
     }
+    /* istanbul ignore next */
+    if (changed) {
+        writeFakeMember(membership);
+    }
+
+    return membership;
 };
 
 /* istanbul ignore next */
 const generateFakeMember = (count) => {
+    const membership = [];
     for (let x = 1; x <= count; ++x) {
         membership.push(generateMemberData());
     }
 
-    writeFakeMember();
-    readOrCreateFakeMember();
+    writeFakeMember(membership);
+    return readOrCreateFakeMember();
 };
 
 /* istanbul ignore next */
@@ -47,14 +59,11 @@ const generateMemberData = () => {
     data.email = faker.internet.email(data.name);
     return data;
 };
+
 /* istanbul ignore next */
-const writeFakeMember = () => {
+const writeFakeMember = (membership) => {
     const json = JSON.stringify(membership, null, 4);
     writeFileSync('./fakeMemberShip.json', json, 'utf8');
 };
 
-readOrCreateFakeMember();
-
-const queryMember = email => membership.find(x => x.email === email);
-
-export { queryMember };
+export { readOrCreateFakeMember };
