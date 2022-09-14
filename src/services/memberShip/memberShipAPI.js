@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-
+/* istanbul ignore next */
 const fetchMember = async () => {
     const membership = [];
     const res = await axios.get(process.env.MEMBER_API_URL);
@@ -13,6 +13,5 @@ const fetchMember = async () => {
         .forEach((member) => membership.push(member));
     return membership;
 };
-
 
 export { fetchMember };

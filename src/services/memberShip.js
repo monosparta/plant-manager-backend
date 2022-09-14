@@ -4,7 +4,12 @@ import { fetchMember } from './memberShip/memberShipAPI';
 let membership = [];
 
 const updateMember = async () => {
-    if (process.env.USE_FAKE_MEMBER === '1' || !process.env.MEMBER_API_URL) {
+    /* istanbul ignore next */
+    if (
+        process.env.USE_FAKE_MEMBER === '1' ||
+        !process.env.MEMBER_API_URL ||
+        process.env.NODE_ENV === 'test'
+    ) {
         membership = readOrCreateFakeMember();
     } else {
         membership = await fetchMember();
