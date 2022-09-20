@@ -1,22 +1,22 @@
 import request from 'supertest';
 import app from '../../src/app';
 
-let token;
+let token, userToken;
 
 beforeAll(async () => {
     const res = await request(app)
         .post('/api/user/login')
         .send({ email: 'Jeanne_Ondricka@gmail.com', password: 'demo' });
     token = res.body.token;
+
+    const resUser = await request(app)
+        .post('/api/user/login')
+        .send({ email: 'Lori.Crist@gmail.com', password: 'demo' });
+    userToken = resUser.body.token;
 });
 
 describe('Test user permission and rented List', () => {
     test('It should block admin rented List request sent by user.', async () => {
-        const res = await request(app)
-            .post('/api/user/login')
-            .send({ email: 'Lori.Crist@gmail.com', password: 'demo' });
-        const userToken = res.body.token;
-
         return request(app)
             .get('/api/admin/rentedInfo')
             .set('Auth-Method', 'JWT')
@@ -76,6 +76,17 @@ describe('Test take rent', () => {
             });
     });
 
+    test('It should proceed admin mark rent taken request sent by admin.', () => {
+        return request(app)
+            .put('/api/admin/rent/1')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(200)
+            .then((res) => {
+                expect(res.body.message).toBe('Update successful');
+            });
+    });
+
     test('It should block admin mark rent taken request when rent container is already taken.', () => {
         return request(app)
             .put('/api/admin/rent/1')
@@ -84,17 +95,6 @@ describe('Test take rent', () => {
             .expect(409)
             .then((res) => {
                 expect(res.body.message).toBe('Rent already taken');
-            });
-    });
-
-    test('It should proceed admin mark rent taken request sent by admin.', () => {
-        return request(app)
-            .put('/api/admin/rent/2')
-            .set('Auth-Method', 'JWT')
-            .set('Auth', token)
-            .expect(200)
-            .then((res) => {
-                expect(res.body.message).toBe('Update successful');
             });
     });
 });
