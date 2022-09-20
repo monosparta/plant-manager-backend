@@ -99,30 +99,6 @@ describe('Test take rent', () => {
     });
 });
 
-describe('Test delete rent', () => {
-    test('It should block admin delete rent request when rent is not found.', () => {
-        return request(app)
-            .delete('/api/admin/rent/0')
-            .set('Auth-Method', 'JWT')
-            .set('Auth', token)
-            .expect(404)
-            .then((res) => {
-                expect(res.body.message).toBe('Rent not found');
-            });
-    });
-
-    test('It should proceed admin delete rent request sent by admin.', () => {
-        return request(app)
-            .delete('/api/admin/rent/2')
-            .set('Auth-Method', 'JWT')
-            .set('Auth', token)
-            .expect(200)
-            .then((res) => {
-                expect(res.body.message).toBe('Delete successful');
-            });
-    });
-});
-
 describe('Test add admin', () => {
     test('It should block admin add admin request when no body is provided.', () => {
         return request(app)

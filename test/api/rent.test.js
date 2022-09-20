@@ -213,6 +213,17 @@ describe('Test user filling rent form', () => {
 });
 
 describe('Test file delete', () => {
+    test('It should block rent delete request when rent is not found.', () => {
+        return request(app)
+            .delete('/api/admin/rent/0')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', adminToken)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('Rent not found');
+            });
+    });
+
     test('It should proceed rent delete with plant data.', async () => {
         return request(app)
             .delete(`/api/admin/rent/${readLatestRentId('Eula_Ritchie@hotmail.com')}`)
@@ -277,6 +288,17 @@ describe('Test file delete', () => {
                     'Eula_Ritchie@hotmail.com'
                 )}`
             )
+            .set('Auth-Method', 'JWT')
+            .set('Auth', adminToken)
+            .expect(200)
+            .then((res) => {
+                expect(res.body.message).toBe('Delete successful');
+            });
+    });
+
+    test('It should proceed rent delete with fake data.', () => {
+        return request(app)
+            .delete('/api/admin/rent/2')
             .set('Auth-Method', 'JWT')
             .set('Auth', adminToken)
             .expect(200)
