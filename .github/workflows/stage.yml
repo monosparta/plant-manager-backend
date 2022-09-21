@@ -76,6 +76,9 @@ jobs:
           echo EMAIL_SERVICE=\"${{ secrets.EMAIL_SERVICE }}\" >> .env
           echo EMAIL_ACCOUNT=\"${{ secrets.EMAIL_ACCOUNT }}\" >> .env
           echo EMAIL_PASSWORD=\"${{ secrets.EMAIL_PASSWORD }}\" >> .env
+          echo >> .env
+          echo USE_FAKE_MEMBER=\"1\" >> .env
+          echo MEMBER_API_URL=\"${{ secrets.MEMBER_API_URL }}\" >> .env
       - name: Start server
         run: |
           cd ${{ secrets.DEPLOY_PATH }}
