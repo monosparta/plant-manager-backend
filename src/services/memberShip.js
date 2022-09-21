@@ -22,4 +22,4 @@ updateMember();
 
 const queryMember = (email) => membership.find((x) => x.email === email);
 
-export { queryMember };
+export { queryMember, updateMember };

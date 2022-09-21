@@ -170,4 +170,15 @@ describe('Test add admin', () => {
                 expect(res.body.message).toBe('Registration success');
             });
     });
+
+    test('It should proceed admin update member list request sent by admin.', () => {
+        return request(app)
+            .put('/api/admin/member')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(200)
+            .then((res) => {
+                expect(res.body.message).toBe('Update successful.');
+            });
+    });
 });

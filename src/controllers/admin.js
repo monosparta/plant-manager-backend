@@ -10,6 +10,7 @@ import { autoAssignContainer } from './rent';
 import { validateEmail } from '../services/mailSender';
 import { roles } from '../middlewares/permission';
 import { sendAdminRegisterEmail } from '../services/mailTemplate';
+import { updateMember } from '../services/memberShip';
 
 const getRentedList = async (req, res) => {
     return res.status(200).json({
@@ -35,6 +36,14 @@ const getRentAmount = async (req, res) => {
             rented: containerCount - emptyCount,
             remain: emptyCount
         }
+    });
+};
+
+const updateMemberRequest = async (req, res) => {
+    await updateMember();
+
+    return res.status(200).json({
+        message: 'Update successful.'
     });
 };
 
@@ -135,5 +144,6 @@ export {
     getRentAmount,
     deleteRent,
     markRentTaken,
-    createAdminAccount
+    createAdminAccount,
+    updateMemberRequest
 };
