@@ -56,7 +56,6 @@ module.exports = {
             Container_ID: 1,
             Register_Time: new Date('2022-08-28T13:52:19.130Z'),
             Rent_Time: new Date('2022-09-02T15:19:27.415Z'),
-            Get_Time: new Date('2022-09-02T16:32:56.565Z'),
             Deadline: 5
         },
         {

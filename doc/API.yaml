@@ -668,6 +668,48 @@ paths:
               example:
                 message: "Rent not found"
 
+  '/admin/member':
+    put:
+      tags:
+        - admin
+      summary: Update member list from member api
+      security:
+        - auth: []
+          authMethod: []
+      responses:
+        '200':
+          description: Update successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Update successful"
+        '400':
+          description: Invalid header
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Invalid header"
+        '401':
+          description: Invalid JWT token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Invalid JWT token"
+        '403':
+          description: Permission denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Permission denied"
+
 # components
 components:
   securitySchemes:

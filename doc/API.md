@@ -37,6 +37,7 @@
   - [POST /admin/addAdmin](#post-admin-add-admin)
   - [PUT /admin/rent/{rentId}](#put-admin-rent)
   - [DELETE /admin/rent/{rentId}](#delete-admin-rent)
+  - [PUT /admin/member](#put-admin-member)
 
 <span id="user-api"></span>
 
@@ -984,6 +985,57 @@ Status Code **200**
 ```json
 {
   "message": "Rent not found"
+}
+```
+
+---
+<span id="put-admin-member"></span>
+
+## `PUT /admin/member`
+*Update member list from member api*
+
+> 需要 [Header](#header)
+
+### 回應
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Update successful|[GenericResponse](#schemagenericresponse)|
+|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid header|[GenericResponse](#schemagenericresponse)|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Invalid JWT token|[GenericResponse](#schemagenericresponse)|
+|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Permission denied|[GenericResponse](#schemagenericresponse)|
+
+#### 範例回應：
+
+> 200 Response
+
+```json
+{
+  "message": "Update successful"
+}
+```
+
+> 400 Response
+
+```json
+{
+  "message": "Invalid header"
+}
+```
+
+> 401 Response
+
+```json
+{
+  "message": "Invalid JWT token"
+}
+```
+
+> 403 Response
+
+```json
+{
+  "message": "Permission denied"
 }
 ```
 
