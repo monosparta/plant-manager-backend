@@ -1,0 +1,38 @@
+name: Quality Check
+on: [ push, pull_request ]
+
+jobs:
+  build:
+    name: Quality check 
+    runs-on: ubuntu-latest
+    environment: test
+    env:
+      NODE_ENV: test
+      CI_DB_USERNAME: root
+      CI_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      JWT_SECRECT: ${{ secrets.JWT_SECRECT }}
+      EMAIL_SERVICE: ${{ secrets.EMAIL_SERVICE }}
+      EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
+      EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+      EMAIL_WHITELIST: 1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up MySQL 8
+        uses: mirromutth/mysql-action@master
+        with:
+          mysql version: 8.0
+          mysql database: rental-planter
+          mysql root password: ${{ secrets.DB_PASSWORD }}
+      - name: Install dependencies
+        run: yarn
+      - name: Apply database for testing
+        run: yarn migrate:up
+      - name: Check code quality
+        run: yarn lint:strict
+      - name: Build test
+        run: yarn build
+      - name: Runtime test
+        run: yarn test

@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { getUserFromEmail, createUser, updatePassword } from '../services/user';
 import { getUserRentData } from '../services/rent';
 import { createPassword } from '../services/randomPassword';
-import { queryMember } from '../services/fakeMembership';
+import { queryMember } from '../services/memberShip';
 import { roles } from '../middlewares/permission';
 import { sendForgetPasswordEmail, sendRegisterEmail } from '../services/mailTemplate';
 
@@ -68,12 +68,7 @@ const register = async (req, res) => {
         });
     }
 
-    let member;
-    if (process.env.NODE_ENV === 'production') {
-        // TODO: Query monospace member
-    } else {
-        member = queryMember(email);
-    }
+    const member = queryMember(email);
     if (!member) {
         return res.status(404).json({
             message: 'Membership not found'
@@ -82,7 +77,7 @@ const register = async (req, res) => {
 
     const password = createPassword(8);
     const user = await createUser(
-        member.ID,
+        member.uuid,
         member.name,
         member.email,
         password,

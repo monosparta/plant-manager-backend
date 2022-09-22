@@ -1,7 +1,7 @@
 import { getContainers, getEmptyContainers } from '../services/container';
 import { deletePlantByID, getPlant } from '../services/plant';
 import { deleteRentById, getAllRentData, getRentById, getWaitingRentData, markContainerTaken } from '../services/rent';
-import { unlinkSync } from 'fs';
+import { unlinkSync, existsSync } from 'fs';
 import { join } from 'path';
 import { createUser, getUserFromEmail, getUserFromID } from '../services/user';
 import { createPassword } from '../services/randomPassword';
@@ -10,6 +10,7 @@ import { autoAssignContainer } from './rent';
 import { validateEmail } from '../services/mailSender';
 import { roles } from '../middlewares/permission';
 import { sendAdminRegisterEmail } from '../services/mailTemplate';
+import { updateMember } from '../services/memberShip';
 
 const getRentedList = async (req, res) => {
     return res.status(200).json({
@@ -35,6 +36,14 @@ const getRentAmount = async (req, res) => {
             rented: containerCount - emptyCount,
             remain: emptyCount
         }
+    });
+};
+
+const updateMemberRequest = async (req, res) => {
+    await updateMember();
+
+    return res.status(200).json({
+        message: 'Update successful.'
     });
 };
 
@@ -71,7 +80,11 @@ const deleteRent = async (req, res) => {
 
     const plant = await getPlant(rent.Plant_ID);
     if (plant) {
-        unlinkSync(join('public/', plant.Img_Path));
+        if (plant.Img_Path.startsWith('uploads/')) {
+            if (existsSync(join('./public', plant.Img_Path))) {
+                unlinkSync(join('./public', plant.Img_Path));
+            }
+        }
         deletePlantByID(plant.ID);
     }
 
@@ -131,5 +144,6 @@ export {
     getRentAmount,
     deleteRent,
     markRentTaken,
-    createAdminAccount
+    createAdminAccount,
+    updateMemberRequest
 };

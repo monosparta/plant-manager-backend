@@ -1,0 +1,85 @@
+name: Deploy(Stage)
+on:
+  push:
+   branches:
+     - stage
+jobs:
+  build:
+    name: Check runtime quality
+    runs-on: ubuntu-latest
+    environment: test
+    env:
+      NODE_ENV: test
+      CI_DB_USERNAME: root
+      CI_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      JWT_SECRECT: ${{ secrets.JWT_SECRECT }}
+      EMAIL_SERVICE: ${{ secrets.EMAIL_SERVICE }}
+      EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
+      EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+      EMAIL_WHITELIST: 1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up MySQL 8
+        uses: mirromutth/mysql-action@master
+        with:
+          mysql version: 8.0
+          mysql database: rental-planter
+          mysql root password: ${{ secrets.DB_PASSWORD }}
+      - name: Install dependencies
+        run: yarn
+      - name: Apply database for testing
+        run: yarn migrate:up
+      - name: Runtime test
+        run: yarn test
+
+  deploy:
+    needs: build
+    name: Deploy update on remote
+    runs-on: [self-hosted, stage]
+    environment: stage
+    steps:
+      - name: Update files
+        run: |
+          cd ${{ secrets.DEPLOY_PATH }}
+          git checkout stage
+          git pull --rebase=true
+      - name: Stop server if running
+        run: |
+          cd ${{ secrets.DEPLOY_PATH }}
+          pm2 stop ecosystem.config.json
+      - name: Install dependencies
+        run: |
+          cd ${{ secrets.DEPLOY_PATH }}
+          yarn
+      - name: Build
+        run: |
+          cd ${{ secrets.DEPLOY_PATH }}
+          yarn build:clean
+      - name: Set up environment variable
+        run: |
+          cd ${{ secrets.DEPLOY_PATH }}
+          echo NODE_ENV=\"stage\" > .env
+          echo >> .env
+          echo STAGE_DB_USERNAME=\"${{ secrets.STAGE_DB_USERNAME }}\" >> .env
+          echo STAGE_DB_PASSWORD=\"${{ secrets.STAGE_DB_PASSWORD }}\" >> .env
+          echo >> .env
+          echo JWT_SECRECT=\"${{ secrets.JWT_SECRECT }}\" >> .env
+          echo >> .env
+          echo FRONT_URL=\"${{ secrets.FRONT_URL }}\" >> .env
+          echo >> .env
+          echo MQTT_USERNAME=\"${{ secrets.MQTT_USERNAME }}\" >> .env
+          echo MQTT_PASSWORD=\"${{ secrets.MQTT_PASSWORD }}\" >> .env
+          echo >> .env
+          echo EMAIL_SERVICE=\"${{ secrets.EMAIL_SERVICE }}\" >> .env
+          echo EMAIL_ACCOUNT=\"${{ secrets.EMAIL_ACCOUNT }}\" >> .env
+          echo EMAIL_PASSWORD=\"${{ secrets.EMAIL_PASSWORD }}\" >> .env
+          echo >> .env
+          echo USE_FAKE_MEMBER=\"1\" >> .env
+          echo MEMBER_API_URL=\"${{ secrets.MEMBER_API_URL }}\" >> .env
+      - name: Start server
+        run: |
+          cd ${{ secrets.DEPLOY_PATH }}
+          pm2 reload ecosystem.config.json
