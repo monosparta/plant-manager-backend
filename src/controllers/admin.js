@@ -3,7 +3,7 @@ import { deletePlantByID, getPlant } from '../services/plant';
 import { deleteRentById, getAllRentData, getRentById, getWaitingRentData, markContainerTaken } from '../services/rent';
 import { unlinkSync, existsSync } from 'fs';
 import { join } from 'path';
-import { createUser, getAdminList, getUserFromEmail, getUserFromID } from '../services/user';
+import { createUser, destroyUserByID, getAdminList, getUserFromEmail, getUserFromID } from '../services/user';
 import { createPassword } from '../services/randomPassword';
 import { randomUUID } from 'crypto';
 import { autoAssignContainer } from './rent';
@@ -61,6 +61,35 @@ const getAdmins = async (req, res) => {
                 role: item.Role
             };
         })
+    });
+};
+
+const deleteAdmin = async (req, res) => {
+    const own = await getUserFromID(req.userId);
+    const user = await getUserFromID(req.params.id);
+
+    if (!user || user.Role !== roles.admin) {
+        return res.status(404).json({
+            message: 'User not found'
+        });
+    }
+
+    if (user.ID === own.ID) {
+        return res.status(403).json({
+            message: 'You are deleting yourself!'
+        });
+    }
+
+    if (user.Email === 'root@rental.planter') {
+        return res.status(403).json({
+            message: 'Could not delete this admin'
+        });
+    }
+
+    await destroyUserByID(user.ID);
+
+    return res.status(200).json({
+        message: 'Delete successful'
     });
 };
 
@@ -163,5 +192,6 @@ export {
     markRentTaken,
     createAdminAccount,
     updateMemberRequest,
-    getAdmins
+    getAdmins,
+    deleteAdmin
 };

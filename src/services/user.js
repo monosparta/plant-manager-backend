@@ -27,4 +27,6 @@ const updatePassword = (ID, password, isDefault = false) =>
 
 const getAdminList = () => db.User.findAll({ where: { Role: roles.admin } });
 
-export { getUserFromEmail, getUserFromID, createUser, updatePassword, getAdminList };
+const destroyUserByID = (ID) => db.User.destroy({ where: { ID } });
+
+export { getUserFromEmail, getUserFromID, createUser, updatePassword, getAdminList, destroyUserByID };
