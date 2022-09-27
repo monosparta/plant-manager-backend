@@ -3,7 +3,7 @@ import { deletePlantByID, getPlant } from '../services/plant';
 import { deleteRentById, getAllRentData, getRentById, getWaitingRentData, markContainerTaken } from '../services/rent';
 import { unlinkSync, existsSync } from 'fs';
 import { join } from 'path';
-import { createUser, getUserFromEmail, getUserFromID } from '../services/user';
+import { createUser, getAdminList, getUserFromEmail, getUserFromID } from '../services/user';
 import { createPassword } from '../services/randomPassword';
 import { randomUUID } from 'crypto';
 import { autoAssignContainer } from './rent';
@@ -44,6 +44,23 @@ const updateMemberRequest = async (req, res) => {
 
     return res.status(200).json({
         message: 'Update successful.'
+    });
+};
+
+const getAdmins = async (req, res) => {
+    const adminList = await getAdminList();
+
+    return res.status(200).json({
+        message: 'Query Success',
+        data: adminList.map(item => {
+            return {
+                id: item.ID,
+                name: item.Name,
+                email: item.Email,
+                isDefaultPassword: item.Is_Default_Password,
+                role: item.Role
+            };
+        })
     });
 };
 
@@ -145,5 +162,6 @@ export {
     deleteRent,
     markRentTaken,
     createAdminAccount,
-    updateMemberRequest
+    updateMemberRequest,
+    getAdmins
 };
