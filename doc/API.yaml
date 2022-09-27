@@ -710,6 +710,27 @@ paths:
               example:
                 message: "Permission denied"
 
+  /admin/admin:
+    get:
+      tags:
+        - admin
+      summary: Get admin list
+      security:
+        - auth: []
+          authMethod: []
+      responses:
+        '200':
+          description: Query Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/User'
+
 # components
 components:
   securitySchemes:
@@ -841,6 +862,3 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Rent'
-
-
-
