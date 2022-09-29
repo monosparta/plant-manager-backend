@@ -15,11 +15,11 @@ router.put('/rent/:id', verifyToken, checkAdmin, markRentTaken);
 
 router.delete('/rent/:id', verifyToken, checkAdmin, deleteRent);
 
-router.post('/addAdmin', verifyToken, checkAdmin, createAdminAccount);
-
 router.put('/member', verifyToken, checkAdmin, updateMemberRequest);
 
 router.get('/admin', verifyToken, checkAdmin, getAdmins);
+
+router.post('/admin', verifyToken, checkAdmin, createAdminAccount);
 
 router.delete('/admin/:id', verifyToken, checkAdmin, deleteAdmin);
 
