@@ -182,3 +182,63 @@ describe('Test add admin', () => {
             });
     });
 });
+
+describe('Test get and delete admin', () => {
+    let adminList = [];
+
+    test('It should return a list of admins.', () => {
+        return request(app)
+            .get('/api/admin/admin')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(200)
+            .then((res) => {
+                adminList = res.body.data;
+                expect(res.body.message).toBe('Query Success');
+            });
+    });
+
+    test('It should block delete admin that\'s not exist.', () => {
+        return request(app)
+            .delete('/api/admin/admin/997939d1-564b-4496-bf70-d2fe30f15c55')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('User not found');
+            });
+    });
+
+    test('It should block delete admin that\'s self account.', () => {
+        return request(app)
+            .delete('/api/admin/admin/50de10eb-7158-4c61-9594-0fbb3341a824')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(403)
+            .then((res) => {
+                expect(res.body.message).toBe('You are deleting yourself!');
+            });
+    });
+
+    test('It should block delete admin that\'s root.', () => {
+        return request(app)
+            .delete(`/api/admin/admin/${adminList.find(x => x.email === 'root@rental.planter').id}`)
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(403)
+            .then((res) => {
+                expect(res.body.message).toBe('Could not delete this admin');
+            });
+    });
+
+    test('It should procees admin delete.', () => {
+        return request(app)
+            .delete('/api/admin/admin/4a9cbf46-8b3f-47ed-a016-88f24ce6057c')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(200)
+            .then((res) => {
+                expect(res.body.message).toBe('Delete successful');
+            });
+    });
+});
