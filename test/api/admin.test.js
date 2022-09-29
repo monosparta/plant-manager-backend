@@ -102,7 +102,7 @@ describe('Test take rent', () => {
 describe('Test add admin', () => {
     test('It should block admin add admin request when no body is provided.', () => {
         return request(app)
-            .post('/api/admin/addAdmin')
+            .post('/api/admin/admin')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
             .expect(400)
@@ -113,7 +113,7 @@ describe('Test add admin', () => {
 
     test('It should block admin add admin request when body is incomplete. (1/2)', () => {
         return request(app)
-            .post('/api/admin/addAdmin')
+            .post('/api/admin/admin')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
             .send({ email: 'Lori.Crist@gmail.com' })
@@ -125,7 +125,7 @@ describe('Test add admin', () => {
 
     test('It should block admin add admin request when body is incomplete. (2/2)', () => {
         return request(app)
-            .post('/api/admin/addAdmin')
+            .post('/api/admin/admin')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
             .send({ name: 'Lori' })
@@ -137,7 +137,7 @@ describe('Test add admin', () => {
 
     test('It should block admin add admin request when email is invalid.', () => {
         return request(app)
-            .post('/api/admin/addAdmin')
+            .post('/api/admin/admin')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
             .send({ name: 'Lori', email: 'not-email' })
@@ -149,7 +149,7 @@ describe('Test add admin', () => {
 
     test('It should block admin add admin request when user is already in user database.', () => {
         return request(app)
-            .post('/api/admin/addAdmin')
+            .post('/api/admin/admin')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
             .send({ name: 'Lori', email: 'Lori.Crist@gmail.com' })
@@ -161,7 +161,7 @@ describe('Test add admin', () => {
 
     test('It should proceed admin delete rent request sent by admin.', () => {
         return request(app)
-            .post('/api/admin/addAdmin')
+            .post('/api/admin/admin')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
             .send({ name: 'Test', email: process.env.EMAIL_ACCOUNT })
