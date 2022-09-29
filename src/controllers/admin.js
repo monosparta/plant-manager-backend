@@ -180,7 +180,7 @@ const createAdminAccount = async (req, res) => {
     sendAdminRegisterEmail(user.Email, assigner.Name, user.Name, password);
 
     return res.status(200).json({
-        message: 'Registration success'
+        message: 'Add success'
     });
 };
 

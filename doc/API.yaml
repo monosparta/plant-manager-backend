@@ -670,7 +670,9 @@ paths:
                   message:
                     type: string
                   data:
-                    $ref: '#/components/schemas/User'
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
         '400':
           description: Invalid header
           content:
@@ -759,7 +761,7 @@ paths:
     delete:
       tags:
         - admin
-      summary: delete admin
+      summary: Delete admin
       security:
         - auth: []
           authMethod: []

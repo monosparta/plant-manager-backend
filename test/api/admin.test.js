@@ -167,7 +167,7 @@ describe('Test add admin', () => {
             .send({ name: 'Test', email: process.env.EMAIL_ACCOUNT })
             .expect(200)
             .then((res) => {
-                expect(res.body.message).toBe('Registration success');
+                expect(res.body.message).toBe('Add success');
             });
     });
 
