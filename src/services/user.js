@@ -24,4 +24,6 @@ const updatePassword = (ID, password, isDefault = false) =>
         { where: { ID } }
     );
 
-export { getUserFromEmail, getUserFromID, createUser, updatePassword };
+const destroyUserByID = (ID) => db.User.destroy({ where: { ID } });
+
+export { getUserFromEmail, getUserFromID, createUser, updatePassword, destroyUserByID };
