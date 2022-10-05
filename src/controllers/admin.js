@@ -168,7 +168,10 @@ const genMemberList = async () => {
 };
 
 const getMembers = async (req, res) => {
-    return res.status(200).json(await genMemberList());
+    return res.status(200).json({
+        message: 'Query success',
+        data: await genMemberList()
+    });
 };
 
 const deleteMember = async (req, res) => {
