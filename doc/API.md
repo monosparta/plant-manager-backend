@@ -1018,6 +1018,7 @@ Status Code **200**
 |»» registeredMembers|[[Member](#schemamember)]|false|none|none|
 |»»» id|string(uuid)|false|none|none|
 |»»» name|string|false|none|none|
+|»»» updatedName|string|false|none|none|
 |»»» email|string|false|none|none|
 |»»» updatedEmail|string|false|none|none|
 |»» cachedMembers|[[Member](#schemamember)]|false|none|none|
@@ -1239,6 +1240,7 @@ Status Code **200**
 {
   "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
   "name": "string",
+  "updatedName": "string",
   "email": "string",
   "updatedEmail": "string"
 }
@@ -1251,6 +1253,7 @@ Status Code **200**
 |---|---|---|---|---|
 |id|string(uuid)|false|none|none|
 |name|string|false|none|none|
+|updatedName|string|false|none|none|
 |email|string|false|none|none|
 |updatedEmail|string|false|none|none|
 

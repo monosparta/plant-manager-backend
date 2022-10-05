@@ -875,6 +875,8 @@ components:
           format: uuid
         name:
           type: string
+        updatedName:
+          type: string
         email:
           type: string
         updatedEmail:
