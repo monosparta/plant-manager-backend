@@ -20,6 +20,8 @@ const updateMember = async () => {
 
 updateMember();
 
-const queryMember = (email) => membership.find((x) => x.email === email);
+const queryMember = (email) => membership.find(x => x.email === email);
 
-export { queryMember, updateMember };
+const memberList = () => membership.map(x => ({ uuid: x.uuid, name: x.name, email: x.email }));
+
+export { queryMember, updateMember, memberList };

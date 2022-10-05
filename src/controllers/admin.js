@@ -3,14 +3,14 @@ import { deletePlantByID, getPlant } from '../services/plant';
 import { deleteRentById, getAllRentData, getRentById, getWaitingRentData, markContainerTaken } from '../services/rent';
 import { unlinkSync, existsSync } from 'fs';
 import { join } from 'path';
-import { createUser, destroyUserByID, getUserFromEmail, getUserFromID } from '../services/user';
+import { createUser, destroyUserByID, getUserFromEmail, getUserFromID, getUserList } from '../services/user';
 import { createPassword } from '../services/randomPassword';
 import { randomUUID } from 'crypto';
 import { autoAssignContainer } from './rent';
 import { validateEmail } from '../services/mailSender';
 import { roles } from '../middlewares/permission';
 import { sendAdminRegisterEmail } from '../services/mailTemplate';
-import { updateMember } from '../services/memberShip';
+import { memberList, updateMember } from '../services/memberShip';
 
 const getRentedList = async (req, res) => {
     return res.status(200).json({
@@ -138,6 +138,39 @@ const createAdminAccount = async (req, res) => {
     });
 };
 
+const genMemberList = async () => {
+    const registeredMembers = [];
+    let cachedMembers = memberList();
+    const notMemberAccounts = [];
+
+    const users = await getUserList();
+
+    for (const user of users) {
+        const member = cachedMembers.find(x => x.uuid === user.ID);
+        const registered = {
+            id: user.ID,
+            name: user.Name,
+            email: user.Email
+        };
+        if (member) {
+            if (member.email !== user.Email) {
+                registered.updateEmail = member.email;
+            }
+
+            cachedMembers = cachedMembers.filter(x => x.uuid !== member.uuid);
+            registeredMembers.push(registered);
+        } else {
+            notMemberAccounts.push(registered);
+        }
+    }
+
+    return { registeredMembers, cachedMembers, notMemberAccounts };
+};
+
+const getMembers = async (req, res) => {
+    return res.status(200).json(await genMemberList());
+};
+
 const deleteMember = async (req, res) => {
     const user = await getUserFromID(req.params.id);
 
@@ -161,5 +194,6 @@ export {
     markRentTaken,
     createAdminAccount,
     updateMemberRequest,
-    deleteMember
+    deleteMember,
+    getMembers
 };

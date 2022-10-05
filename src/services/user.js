@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import db from '../db/models';
 import bcrypt from 'bcrypt';
+import { roles } from '../middlewares/permission';
 
 const getUserFromEmail = Email => db.User.findOne({ where: { Email } });
 
@@ -24,6 +25,15 @@ const updatePassword = (ID, password, isDefault = false) =>
         { where: { ID } }
     );
 
+const getUserList = () => db.User.findAll({ where: { Role: roles.user } });
+
 const destroyUserByID = (ID) => db.User.destroy({ where: { ID } });
 
-export { getUserFromEmail, getUserFromID, createUser, updatePassword, destroyUserByID };
+export {
+    getUserFromEmail,
+    getUserFromID,
+    createUser,
+    updatePassword,
+    destroyUserByID,
+    getUserList
+};
