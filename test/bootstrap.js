@@ -41,12 +41,22 @@ export default () => {
 
     const membership = [
         {
-            ID: 'ae4b61eb-92b7-4f87-9358-7a2cbbf03a81',
+            uuid: '503ac323-3296-4a84-b3b7-2c3dfc5e2689',
+            name: 'Alva1',
+            email: 'Alva10@gmail.com'
+        },
+        {
+            uuid: 'edd937f2-c323-4b87-9440-ba7d91dfc9f6',
+            name: 'Eula',
+            email: 'Eula_Ritchie@hotmail.com'
+        },
+        {
+            uuid: 'ae4b61eb-92b7-4f87-9358-7a2cbbf03a81',
             name: 'Gage',
             email: 'Gage_Gislason@gmail.com'
         },
         {
-            ID: '0484592b-4c87-4b01-abce-9f9235a65793',
+            uuid: '0484592b-4c87-4b01-abce-9f9235a65793',
             name: 'Lori',
             email: 'Lori.dup@gmail.com'
         }
