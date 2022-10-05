@@ -37,7 +37,9 @@
   - [POST /admin/addAdmin](#post-admin-add-admin)
   - [PUT /admin/rent/{rentId}](#put-admin-rent)
   - [DELETE /admin/rent/{rentId}](#delete-admin-rent)
-  - [PUT /admin/member](#put-admin-member)
+  - [GET /admin/members](#get-admin-members)
+  - [PUT /admin/members](#put-admin-members)
+  - [DELETE /admin/member/{userId}](#delete-admin-member)
 
 <span id="user-api"></span>
 
@@ -989,9 +991,100 @@ Status Code **200**
 ```
 
 ---
-<span id="put-admin-member"></span>
+<span id="get-admin-members"></span>
 
-## `PUT /admin/member`
+## `GET /admin/members`
+*Get cached and registered member list*
+
+> 需要 [Header](#header)
+
+### 回應
+
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Query successful|Inline|
+|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid header|[GenericResponse](#schemagenericresponse)|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Invalid JWT token|[GenericResponse](#schemagenericresponse)|
+|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Permission denied|[GenericResponse](#schemagenericresponse)|
+#### 回應參數
+
+Status Code **200**
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|» registeredMembers|[[User](#schemauser)]|false|none|none|
+|»» id|string(uuid)|false|none|none|
+|»» name|string|false|none|none|
+|»» email|string|false|none|none|
+|»» isDefaultPassword|boolean|false|none|none|
+|»» role|integer|false|none|none|
+|» cachedMembers|[[User](#schemauser)]|false|none|none|
+|» notMemberAccounts|[[User](#schemauser)]|false|none|none|
+
+#### 範例回應：
+
+> 200 Response
+
+```json
+{
+  "registeredMembers": [
+    {
+      "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+      "name": "string",
+      "email": "string",
+      "isDefaultPassword": true,
+      "role": 0
+    }
+  ],
+  "cachedMembers": [
+    {
+      "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+      "name": "string",
+      "email": "string",
+      "isDefaultPassword": true,
+      "role": 0
+    }
+  ],
+  "notMemberAccounts": [
+    {
+      "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+      "name": "string",
+      "email": "string",
+      "isDefaultPassword": true,
+      "role": 0
+    }
+  ]
+}
+```
+
+> 400 Response
+
+```json
+{
+  "message": "Invalid header"
+}
+```
+
+> 401 Response
+
+```json
+{
+  "message": "Invalid JWT token"
+}
+```
+
+> 403 Response
+
+```json
+{
+  "message": "Permission denied"
+}
+```
+---
+<span id="put-admin-members"></span>
+
+## `PUT /admin/members`
 *Update member list from member api*
 
 > 需要 [Header](#header)
@@ -1036,6 +1129,71 @@ Status Code **200**
 ```json
 {
   "message": "Permission denied"
+}
+```
+---
+<span id="delete-admin-member"></span>
+
+## `DELETE /admin/member/{userId}`
+*Delete member by id*
+
+> 需要 [Header](#header)
+
+#### 參數
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|userId|path|string(uuid)|true|ID of user|
+
+### 回應
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Delete successful|[GenericResponse](#schemagenericresponse)|
+|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid header|[GenericResponse](#schemagenericresponse)|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Invalid JWT token|[GenericResponse](#schemagenericresponse)|
+|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Permission denied|[GenericResponse](#schemagenericresponse)|
+|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|User not found|[GenericResponse](#schemagenericresponse)|
+
+#### 範例回應：
+
+> 200 Response
+
+```json
+{
+  "message": "Delete successful"
+}
+```
+
+> 400 Response
+
+```json
+{
+  "message": "Invalid header"
+}
+```
+
+> 401 Response
+
+```json
+{
+  "message": "Invalid JWT token"
+}
+```
+
+> 403 Response
+
+```json
+{
+  "message": "Permission denied"
+}
+```
+
+> 404 Response
+
+```json
+{
+  "message": "User not found"
 }
 ```
 

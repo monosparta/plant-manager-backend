@@ -668,7 +668,58 @@ paths:
               example:
                 message: "Rent not found"
 
-  '/admin/member':
+  '/admin/members':
+    get:
+      tags:
+        - admin
+      summary: Get cached and registered member list
+      security:
+        - auth: []
+          authMethod: []
+      responses:
+        '200':
+          description: Query successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  registeredMembers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  cachedMembers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  notMemberAccounts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid header
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Invalid header"
+        '401':
+          description: Invalid JWT token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Invalid JWT token"
+        '403':
+          description: Permission denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Permission denied"
     put:
       tags:
         - admin
@@ -709,6 +760,63 @@ paths:
                 $ref: '#/components/schemas/GenericResponse'
               example:
                 message: "Permission denied"
+  '/admin/member/{userId}':
+    delete:
+      tags:
+        - admin
+      summary: Delete member by id
+      security:
+        - auth: []
+          authMethod: []      
+      parameters:
+        - name: userId
+          in: path
+          description: ID of user
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Delete successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Delete successful"
+        '400':
+          description: Invalid header
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Invalid header"
+        '401':
+          description: Invalid JWT token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Invalid JWT token"
+        '403':
+          description: Permission denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Permission denied"
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "User not found"
 
 # components
 components:
