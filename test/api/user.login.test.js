@@ -13,7 +13,7 @@ describe('Test login with user', () => {
     test('It should block login request when body is incomplete. (1/2)', () => {
         return request(app)
             .post('/api/user/login')
-            .send({ email: 'Lori.Crist@gmail.com' })
+            .send({ email: 'Eula_Ritchie@hotmail.com' })
             .expect(400)
             .then((res) => {
                 expect(res.body.message).toBe('Invalid body');
@@ -42,7 +42,7 @@ describe('Test login with user', () => {
     test('It should block login request when password is incorrect.', () => {
         return request(app)
             .post('/api/user/login')
-            .send({ email: 'Lori.Crist@gmail.com', password: 'not-demo' })
+            .send({ email: 'Eula_Ritchie@hotmail.com', password: 'not-demo' })
             .expect(401)
             .then((res) => {
                 expect(res.body.message).toBe('Invalid user or password!');
@@ -52,7 +52,7 @@ describe('Test login with user', () => {
     test('It should process the login request.', () => {
         return request(app)
             .post('/api/user/login')
-            .send({ email: 'Lori.Crist@gmail.com', password: 'demo' })
+            .send({ email: 'Eula_Ritchie@hotmail.com', password: 'demo' })
             .expect(200)
             .then((res) => {
                 expect(res.body.message).toBe('Login success');
