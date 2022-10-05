@@ -687,15 +687,15 @@ paths:
                   registeredMembers:
                     type: array
                     items:
-                      $ref: '#/components/schemas/User'
+                      $ref: '#/components/schemas/Member'
                   cachedMembers:
                     type: array
                     items:
-                      $ref: '#/components/schemas/User'
+                      $ref: '#/components/schemas/Member'
                   notMemberAccounts:
                     type: array
                     items:
-                      $ref: '#/components/schemas/User'
+                      $ref: '#/components/schemas/Member'
         '400':
           description: Invalid header
           content:
@@ -861,6 +861,19 @@ components:
           type: boolean
         role:
           type: integer
+    # data
+    Member:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+        updatedEmail:
+          type: string
     Rent:
       type: object
       properties:
