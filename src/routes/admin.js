@@ -17,6 +17,6 @@ router.delete('/rent/:id', verifyToken, checkAdmin, deleteRent);
 
 router.post('/addAdmin', verifyToken, checkAdmin, createAdminAccount);
 
-router.put('/member', verifyToken, checkAdmin, updateMemberRequest);
+router.put('/members', verifyToken, checkAdmin, updateMemberRequest);
 
 export default router;
