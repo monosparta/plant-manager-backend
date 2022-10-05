@@ -195,3 +195,36 @@ describe('Test member manage', () => {
             });
     });
 });
+
+describe('Test member delete', () => {
+    test('It should block delete admin from this method.', () => {
+        return request(app)
+            .delete('/api/admin/member/50de10eb-7158-4c61-9594-0fbb3341a824')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('User not found');
+            });
+    });
+    test('It should block delete member that does not exist.', () => {
+        return request(app)
+            .delete('/api/admin/member/eafaca48-1512-48f5-abb9-e9d912bba011')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('User not found');
+            });
+    });
+    test('It should proceed delete member request.', () => {
+        return request(app)
+            .delete('/api/admin/member/503ac323-3296-4a84-b3b7-2c3dfc5e2689')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(200)
+            .then((res) => {
+                expect(res.body.message).toBe('Delete successful');
+            });
+    });
+});
