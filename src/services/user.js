@@ -27,6 +27,16 @@ const updatePassword = (ID, password, isDefault = false) =>
 
 const getUserList = () => db.User.findAll({ where: { Role: roles.user } });
 
+const updateUser = (ID, username, email) => db.User.update(
+    {
+        Name: username,
+        Email: email
+    },
+    {
+        where: { ID }
+    }
+);
+
 const destroyUserByID = (ID) => db.User.destroy({ where: { ID } });
 
 export {
@@ -35,5 +45,6 @@ export {
     createUser,
     updatePassword,
     destroyUserByID,
-    getUserList
+    getUserList,
+    updateUser
 };

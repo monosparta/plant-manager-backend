@@ -3,14 +3,14 @@ import { deletePlantByID, getPlant } from '../services/plant';
 import { deleteRentById, getAllRentData, getRentById, getWaitingRentData, markContainerTaken } from '../services/rent';
 import { unlinkSync, existsSync } from 'fs';
 import { join } from 'path';
-import { createUser, destroyUserByID, getUserFromEmail, getUserFromID, getUserList } from '../services/user';
+import { createUser, destroyUserByID, getUserFromEmail, getUserFromID, getUserList, updateUser } from '../services/user';
 import { createPassword } from '../services/randomPassword';
 import { randomUUID } from 'crypto';
 import { autoAssignContainer } from './rent';
 import { validateEmail } from '../services/mailSender';
 import { roles } from '../middlewares/permission';
 import { sendAdminRegisterEmail } from '../services/mailTemplate';
-import { memberList, updateMember } from '../services/memberShip';
+import { memberList, queryMemberByUUID, updateMember } from '../services/memberShip';
 
 const getRentedList = async (req, res) => {
     return res.status(200).json({
@@ -178,6 +178,30 @@ const getMembers = async (req, res) => {
     });
 };
 
+const updateMemberData = async (req, res) => {
+    const user = await getUserFromID(req.params.id);
+
+    if (!user || user.Role !== roles.user) {
+        return res.status(404).json({
+            message: 'User not found'
+        });
+    }
+
+    const member = queryMemberByUUID(user.ID);
+
+    if (!member) {
+        return res.status(404).json({
+            message: 'Member not found'
+        });
+    }
+
+    await updateUser(user.ID, member.name, member.email);
+
+    return res.status(200).json({
+        message: 'Update successful'
+    });
+};
+
 const deleteMember = async (req, res) => {
     const user = await getUserFromID(req.params.id);
 
@@ -202,5 +226,6 @@ export {
     createAdminAccount,
     updateMemberRequest,
     deleteMember,
-    getMembers
+    getMembers,
+    updateMemberData
 };
