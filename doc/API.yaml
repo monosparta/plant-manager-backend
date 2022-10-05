@@ -678,24 +678,29 @@ paths:
           authMethod: []
       responses:
         '200':
-          description: Query successful
+          description: Query success
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  registeredMembers:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Member'
-                  cachedMembers:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Member'
-                  notMemberAccounts:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Member'
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      registeredMembers:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Member'
+                      cachedMembers:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Member'
+                      notMemberAccounts:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Member'
         '400':
           description: Invalid header
           content:

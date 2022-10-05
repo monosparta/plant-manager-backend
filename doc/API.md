@@ -1003,7 +1003,7 @@ Status Code **200**
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Query successful|Inline|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Query success|Inline|
 |400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid header|[GenericResponse](#schemagenericresponse)|
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Invalid JWT token|[GenericResponse](#schemagenericresponse)|
 |403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Permission denied|[GenericResponse](#schemagenericresponse)|
@@ -1013,14 +1013,15 @@ Status Code **200**
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|» registeredMembers|[[User](#schemauser)]|false|none|none|
-|»» id|string(uuid)|false|none|none|
-|»» name|string|false|none|none|
-|»» email|string|false|none|none|
-|»» isDefaultPassword|boolean|false|none|none|
-|»» role|integer|false|none|none|
-|» cachedMembers|[[User](#schemauser)]|false|none|none|
-|» notMemberAccounts|[[User](#schemauser)]|false|none|none|
+|» message|string|false|none|none|
+|» data|object|false|none|none|
+|»» registeredMembers|[[Member](#schemamember)]|false|none|none|
+|»»» id|string(uuid)|false|none|none|
+|»»» name|string|false|none|none|
+|»»» email|string|false|none|none|
+|»»» updatedEmail|string|false|none|none|
+|»» cachedMembers|[[Member](#schemamember)]|false|none|none|
+|»» notMemberAccounts|[[Member](#schemamember)]|false|none|none|
 
 #### 範例回應：
 
@@ -1028,33 +1029,33 @@ Status Code **200**
 
 ```json
 {
-  "registeredMembers": [
-    {
-      "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-      "name": "string",
-      "email": "string",
-      "isDefaultPassword": true,
-      "role": 0
-    }
-  ],
-  "cachedMembers": [
-    {
-      "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-      "name": "string",
-      "email": "string",
-      "isDefaultPassword": true,
-      "role": 0
-    }
-  ],
-  "notMemberAccounts": [
-    {
-      "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
-      "name": "string",
-      "email": "string",
-      "isDefaultPassword": true,
-      "role": 0
-    }
-  ]
+  "message": "string",
+  "data": {
+    "registeredMembers": [
+      {
+        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+        "name": "string",
+        "email": "string",
+        "updatedEmail": "string"
+      }
+    ],
+    "cachedMembers": [
+      {
+        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+        "name": "string",
+        "email": "string",
+        "updatedEmail": "string"
+      }
+    ],
+    "notMemberAccounts": [
+      {
+        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+        "name": "string",
+        "email": "string",
+        "updatedEmail": "string"
+      }
+    ]
+  }
 }
 ```
 
@@ -1226,6 +1227,32 @@ Status Code **200**
 |email|string|false|none|none|
 |isDefaultPassword|boolean|false|none|none|
 |role|integer|false|none|none|
+
+<h2 id="tocS_Member">Member</h2>
+<!-- backwards compatibility -->
+<a id="schemamember"></a>
+<a id="schema_Member"></a>
+<a id="tocSmember"></a>
+<a id="tocsmember"></a>
+
+```json
+{
+  "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+  "name": "string",
+  "email": "string",
+  "updatedEmail": "string"
+}
+
+```
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|id|string(uuid)|false|none|none|
+|name|string|false|none|none|
+|email|string|false|none|none|
+|updatedEmail|string|false|none|none|
 
 <h2 id="tocS_Rent">Rent</h2>
 <!-- backwards compatibility -->
