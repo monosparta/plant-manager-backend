@@ -19,4 +19,6 @@ router.post('/addAdmin', verifyToken, checkAdmin, createAdminAccount);
 
 router.put('/members', verifyToken, checkAdmin, updateMemberRequest);
 
+router.delete('/member/:id', verifyToken, checkAdmin, deleteMember);
+
 export default router;
