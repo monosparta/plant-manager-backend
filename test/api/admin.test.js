@@ -196,6 +196,49 @@ describe('Test member manage', () => {
     });
 });
 
+describe('Test member update', () => {
+    test('It should block update admin from this method.', () => {
+        return request(app)
+            .put('/api/admin/member/50de10eb-7158-4c61-9594-0fbb3341a824')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('User not found');
+            });
+    });
+    test('It should block update member that does not exist.', () => {
+        return request(app)
+            .put('/api/admin/member/eafaca48-1512-48f5-abb9-e9d912bba011')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('User not found');
+            });
+    });
+    test('It should block update member that is no longer member.', () => {
+        return request(app)
+            .put('/api/admin/member/ca61ef40-98a5-44d2-8347-b029798a917a')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('Member not found');
+            });
+    });
+    test('It should proceed update member request.', () => {
+        return request(app)
+            .put('/api/admin/member/503ac323-3296-4a84-b3b7-2c3dfc5e2689')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(200)
+            .then((res) => {
+                expect(res.body.message).toBe('Update successful');
+            });
+    });
+});
+
 describe('Test member delete', () => {
     test('It should block delete admin from this method.', () => {
         return request(app)
@@ -228,3 +271,4 @@ describe('Test member delete', () => {
             });
     });
 });
+
