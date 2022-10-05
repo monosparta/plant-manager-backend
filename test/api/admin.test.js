@@ -173,7 +173,7 @@ describe('Test add admin', () => {
 
     test('It should proceed admin update member list request sent by admin.', () => {
         return request(app)
-            .put('/api/admin/member')
+            .put('/api/admin/members')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
             .expect(200)
