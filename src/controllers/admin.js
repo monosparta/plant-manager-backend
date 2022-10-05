@@ -153,6 +153,10 @@ const genMemberList = async () => {
             email: user.Email
         };
         if (member) {
+            if (member.name !== user.Name) {
+                registered.updateName = member.name;
+            }
+
             if (member.email !== user.Email) {
                 registered.updateEmail = member.email;
             }
