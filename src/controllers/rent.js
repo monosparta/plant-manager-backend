@@ -1,8 +1,8 @@
 import { getEmptyContainers } from '../services/container';
-import { createPlant } from '../services/plant';
+import { createPlant, getPlant, updatePlant } from '../services/plant';
 import { assignContainer, assignPlant, getOtherUserRentData, getRentById, getWaitingRents, insertRent } from '../services/rent';
 import { join } from 'path';
-import { unlinkSync } from 'fs';
+import { existsSync, unlinkSync } from 'fs';
 import { getUserFromID } from '../services/user';
 import { sendRentAvailableEmail } from '../services/mailTemplate';
 
@@ -95,4 +95,52 @@ const updatePlantInfo = async (req, res) => {
     });
 };
 
-export { listOtherRents, registerRent, updatePlantInfo, autoAssignContainer };
+const modifyPlantInfo = async (req, res) => {
+    if (
+        !req.body.name ||
+        !req.body.intro ||
+        !req.body.nickname ||
+        !req.body.minHumid
+    ) {
+        // delete file because of failure
+        if (req.file) unlinkSync(req.file.path);
+        return res.status(400).json({
+            message: 'Invalid body'
+        });
+    }
+
+    const rent = await getRentById(parseInt(req.params.id));
+    const plant = await getPlant(rent.Plant_ID);
+    if (!rent || !rent.Container_ID || rent.User_ID !== req.userId || !plant) {
+        // delete file because of failure
+        if (req.file) unlinkSync(req.file.path);
+        return res.status(404).json({
+            message: 'Requested rent not found'
+        });
+    }
+
+    if (req.file && existsSync(plant.Img_Path)) {
+        unlinkSync(plant.Img_Path);
+    }
+
+    await updatePlant(
+        plant.ID,
+        req.body.name,
+        req.body.intro,
+        req.file ? join('uploads/', req.file.filename) : undefined,
+        req.body.nickname,
+        req.body.minHumid
+    );
+
+    res.status(200).json({
+        message: 'Update successful'
+    });
+};
+
+export {
+    listOtherRents,
+    registerRent,
+    updatePlantInfo,
+    autoAssignContainer,
+    modifyPlantInfo
+};
