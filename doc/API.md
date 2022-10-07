@@ -30,6 +30,7 @@
   - [GET /rent/list/others](#get-rent-list-others)
   - [POST /rent/register](#post-rent-register)
   - [POST /rent/plantInfo](#post-rent-plant-info)
+  - [PUT /rent/plantInfo/{rentId}](#put-rent-plant-info)
 - [管理員 API](#admin-api)
   - [GET /admin/rentedInfo](#get-admin-rented-info)
   - [GET /admin/waitList](#get-admin-wait-list)
@@ -540,6 +541,86 @@ minHumid: 0
 ```json
 {
   "message": "Plant already exist"
+}
+```
+
+---
+<span id="put-rent-plant-info"></span>
+
+## `PUT /rent/plantInfo/{rentId}`
+*Modify plant information*
+
+> 需要 [Header](#header)
+
+#### 參數
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|rentId|path|integer(int64)|true|ID of rent|
+
+### Body
+> Content Type: `multipart/form-data`
+
+```yaml
+name: string
+intro: string
+image: file
+nickname: string
+minHumid: 0
+
+```
+
+#### Body 參數
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|body|body|object|false|none|
+|» name|body|string|false|none|
+|» intro|body|string|false|none|
+|» image|body|string(binary)|false|none|
+|» nickname|body|string|false|none|
+|» minHumid|body|integer(int32)|false|none|
+
+### 回應
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Update successful|[GenericResponse](#schemagenericresponse)|
+|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid header|[GenericResponse](#schemagenericresponse)|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Invalid JWT token|[GenericResponse](#schemagenericresponse)|
+|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Requested rent not found|[GenericResponse](#schemagenericresponse)|
+
+#### 範例回應：
+
+> 200 Response
+
+```json
+{
+  "message": "Update successful"
+}
+```
+
+> 400 Response
+
+```json
+{
+  "message": "Invalid header"
+}
+```
+
+> 401 Response
+
+```json
+{
+  "message": "Invalid JWT token"
+}
+```
+
+> 404 Response
+
+```json
+{
+  "message": "Requested rent not found"
 }
 ```
 

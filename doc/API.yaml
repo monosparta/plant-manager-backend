@@ -324,6 +324,74 @@ paths:
                 $ref: '#/components/schemas/GenericResponse'
               example:
                 message: "Plant already exist"
+  '/rent/plantInfo/{rentId}':
+    put:
+      tags:
+        - user
+      summary: Modify plant information
+      parameters:
+      - name: rentId
+        in: path
+        description: ID of rent
+        required: true
+        schema:
+          type: integer
+          format: int64
+      security:
+        - auth: []
+          authMethod: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                intro:
+                  type: string
+                image:
+                  type: string
+                  format: binary
+                nickname:
+                  type: string
+                minHumid:
+                  type: integer
+                  format: int32
+      responses:
+        '200':
+          description: Update successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Update successful"
+        '400':
+          description: Invalid header
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Invalid header"
+        '401':
+          description: Invalid JWT token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Invalid JWT token"
+        '404':
+          description: Requested rent not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Requested rent not found"
+
   /admin/rentedInfo:
     get:
       tags:
