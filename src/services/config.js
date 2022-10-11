@@ -22,6 +22,8 @@ const initConfig = () =>
 const getDeadline = () => config.deadline;
 const getRentLimit = () => config.rentLimit;
 
+const getUpdateHistory = () => db.Config.findAll({ order: [['updatedAt', 'DESC']] });
+
 const update = async (deadline, rentLimit, user = undefined) => {
     await db.Config.create({
         Deadline: deadline,
@@ -35,4 +37,4 @@ const update = async (deadline, rentLimit, user = undefined) => {
 
 initConfig();
 
-export { getDeadline, getRentLimit, update };
+export { getDeadline, getRentLimit, update, getUpdateHistory };

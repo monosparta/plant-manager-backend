@@ -11,7 +11,7 @@ import { validateEmail } from '../services/mailSender';
 import { roles } from '../middlewares/permission';
 import { sendAdminRegisterEmail } from '../services/mailTemplate';
 import { updateMember } from '../services/memberShip';
-import { getDeadline, getRentLimit, update } from '../services/config';
+import { getDeadline, getRentLimit, getUpdateHistory, update } from '../services/config';
 
 const getRentedList = async (req, res) => {
     return res.status(200).json({
@@ -140,6 +140,12 @@ const createAdminAccount = async (req, res) => {
 };
 
 const updateConfig = async (req, res) => {
+    if (!req.body.deadline && !req.body.rentLimit) {
+        return res.status(400).json({
+            message: 'Invalid body'
+        });
+    }
+
     await update(
         req.body.deadline || getDeadline(),
         req.body.rentLimit || getRentLimit(),
@@ -151,6 +157,36 @@ const updateConfig = async (req, res) => {
     });
 };
 
+const listConfig = async (req, res) => {
+    const updateHistory = (await getUpdateHistory()).map(config => ({
+        deadline: config.Deadline,
+        rentLimit: config.Rent_Limit,
+        updatedBy: config.User_ID,
+        updatedAt: config.updatedAt
+    }));
+
+    for (const history of updateHistory) {
+        console.log(history);
+        if (!history.updatedBy) {
+            history.updatedBy = 'SYSTEM';
+            continue;
+        }
+        const user = await getUserFromID(history.updatedBy);
+        history.updatedBy = user?.Name || 'SYSTEM';
+    }
+
+    return res.status(200).json({
+        message: 'Query success',
+        data: {
+            current: {
+                deadline: getDeadline(),
+                rentLimit: getRentLimit()
+            },
+            history: updateHistory
+        }
+    });
+};
+
 export {
     getRentedList,
     getWaitList,
@@ -159,5 +195,6 @@ export {
     markRentTaken,
     createAdminAccount,
     updateMemberRequest,
-    updateConfig
+    updateConfig,
+    listConfig
 };
