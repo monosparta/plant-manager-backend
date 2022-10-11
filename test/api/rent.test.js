@@ -149,6 +149,24 @@ describe('Test user filling rent form', () => {
             });
     });
 
+    test('It should block plant info when requested rent is invalid (ex: not owned).', () => {
+        return request(app)
+            .post('/api/rent/plantInfo')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .field('rent', 1)
+            .field('name', 'test')
+            .field('intro', 'test\ntest')
+            .field('nickname', 'test-nick')
+            .field('minHumid', 20)
+            .attach('image', `${__dirname}/../files/image.jpg`)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('Requested rent not found');
+            });
+    });
+
+
     test('It should block invalid image.', () => {
         return request(app)
             .post('/api/rent/plantInfo')
