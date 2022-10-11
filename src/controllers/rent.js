@@ -119,8 +119,8 @@ const modifyPlantInfo = async (req, res) => {
         });
     }
 
-    if (req.file && existsSync(plant.Img_Path)) {
-        unlinkSync(plant.Img_Path);
+    if (req.file && existsSync(join('./public', plant.Img_Path))) {
+        unlinkSync(join('./public', plant.Img_Path));
     }
 
     await updatePlant(
