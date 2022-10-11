@@ -5,6 +5,7 @@ import { join } from 'path';
 import { unlinkSync } from 'fs';
 import { getUserFromID } from '../services/user';
 import { sendRentAvailableEmail } from '../services/mailTemplate';
+import { getDeadline } from '../services/config';
 
 const listOtherRents = async (req, res) => {
     res.status(200).json({
@@ -32,7 +33,7 @@ const autoAssignContainer = async () => {
         let index = 0;
         for (const rent of waitingList) {
             const user = await getUserFromID(rent.User_ID);
-            await assignContainer(rent.ID, emptyContainers[index++].id);
+            await assignContainer(rent.ID, emptyContainers[index++].id, getDeadline());
 
             const newRent = await getRentById(rent.ID);
 
