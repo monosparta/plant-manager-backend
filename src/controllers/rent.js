@@ -110,7 +110,7 @@ const modifyPlantInfo = async (req, res) => {
     }
 
     const rent = await getRentById(parseInt(req.params.id));
-    const plant = await getPlant(rent.Plant_ID);
+    const plant = (rent) ? await getPlant(rent.Plant_ID): undefined;
     if (!rent || !rent.Container_ID || rent.User_ID !== req.userId || !plant) {
         // delete file because of failure
         if (req.file) unlinkSync(req.file.path);
