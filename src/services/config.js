@@ -22,12 +22,16 @@ const initConfig = () =>
 const getDeadline = () => config.deadline;
 const getRentLimit = () => config.rentLimit;
 
-const update = (deadline, rentLimit, user = undefined) =>
-    db.Config.create({
+const update = async (deadline, rentLimit, user = undefined) => {
+    await db.Config.create({
         Deadline: deadline,
         Rent_Limit: rentLimit,
         User_ID: user
     });
+
+    config.deadline = deadline;
+    config.rentLimit = rentLimit;
+};
 
 initConfig();
 

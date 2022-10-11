@@ -11,6 +11,7 @@ import { validateEmail } from '../services/mailSender';
 import { roles } from '../middlewares/permission';
 import { sendAdminRegisterEmail } from '../services/mailTemplate';
 import { updateMember } from '../services/memberShip';
+import { getDeadline, getRentLimit, update } from '../services/config';
 
 const getRentedList = async (req, res) => {
     return res.status(200).json({
@@ -138,6 +139,18 @@ const createAdminAccount = async (req, res) => {
     });
 };
 
+const updateConfig = async (req, res) => {
+    await update(
+        req.body.deadline || getDeadline(),
+        req.body.rentLimit || getRentLimit(),
+        req.userId
+    );
+
+    return res.status(200).json({
+        message: 'Update successful'
+    });
+};
+
 export {
     getRentedList,
     getWaitList,
@@ -145,5 +158,6 @@ export {
     deleteRent,
     markRentTaken,
     createAdminAccount,
-    updateMemberRequest
+    updateMemberRequest,
+    updateConfig
 };
