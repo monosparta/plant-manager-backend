@@ -93,6 +93,11 @@ describe('Test user rent request', () => {
 });
 
 describe('Test user filling rent form', () => {
+    let plantId;
+    beforeAll(() => {
+        plantId = readLatestRentId('Eula_Ritchie@hotmail.com');
+    });
+
     test('It should block plant info when no body is provided.', () => {
         return request(app)
             .post('/api/rent/plantInfo')
@@ -109,7 +114,7 @@ describe('Test user filling rent form', () => {
             .post('/api/rent/plantInfo')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
-            .field('rent', readLatestRentId('Eula_Ritchie@hotmail.com'))
+            .field('rent', plantId)
             .field('name', 'test')
             .field('intro', 'test\ntest')
             .field('nickname', 'test-nick')
@@ -172,7 +177,7 @@ describe('Test user filling rent form', () => {
             .post('/api/rent/plantInfo')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
-            .field('rent', readLatestRentId('Eula_Ritchie@hotmail.com'))
+            .field('rent', plantId)
             .field('name', 'test')
             .field('intro', 'test\ntest')
             .field('nickname', 'test-nick')
@@ -186,7 +191,7 @@ describe('Test user filling rent form', () => {
             .post('/api/rent/plantInfo')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
-            .field('rent', readLatestRentId('Eula_Ritchie@hotmail.com'))
+            .field('rent', plantId)
             .field('name', 'test')
             .field('intro', 'test\ntest')
             .field('nickname', 'test-nick')
@@ -200,7 +205,7 @@ describe('Test user filling rent form', () => {
             .post('/api/rent/plantInfo')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
-            .field('rent', readLatestRentId('Eula_Ritchie@hotmail.com'))
+            .field('rent', plantId)
             .field('name', 'test')
             .field('intro', 'test\ntest')
             .field('nickname', 'test-nick')
@@ -217,7 +222,7 @@ describe('Test user filling rent form', () => {
             .post('/api/rent/plantInfo')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
-            .field('rent', readLatestRentId('Eula_Ritchie@hotmail.com'))
+            .field('rent', plantId)
             .field('name', 'test')
             .field('intro', 'test\ntest')
             .field('nickname', 'test-nick')
