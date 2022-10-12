@@ -293,13 +293,24 @@ paths:
               example:
                 message: "Update successful"
         '400':
-          description: Invalid header
+          description: Invalid request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/GenericResponse'
-              example:
-                message: "Invalid header"
+              examples:
+                "Header error":
+                  value:
+                    message: "Invalid header"
+                "Body error":
+                  value:
+                    message: "Invalid body"
+                "File type unexpected":
+                  value:
+                    message: "Unexpected field"
+                "File too large":
+                  value:
+                    message: "File too large"
         '401':
           description: Invalid JWT token
           content:
