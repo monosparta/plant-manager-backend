@@ -11,6 +11,18 @@ const createPlant = (plantName, intro, imgPath, nickName, minHumid) => db.Plant.
     Min_Humid: minHumid
 });
 
+const updatePlant = (ID, plantName, intro, imgPath, nickName, minHumid) =>
+    db.Plant.update(
+        {
+            Name: plantName,
+            Intro: intro,
+            Img_Path: imgPath,
+            Nickname: nickName,
+            Min_Humid: minHumid
+        },
+        { where: { ID } }
+    );
+
 const deletePlantByID = ID => db.Plant.destroy({ where: { ID } });
 
-export { getPlant, createPlant, deletePlantByID };
+export { getPlant, createPlant, deletePlantByID, updatePlant };
