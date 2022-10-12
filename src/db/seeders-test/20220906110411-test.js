@@ -31,6 +31,15 @@ module.exports = {
             Role: 0
         },
         {
+            ID: '0cd3e857-ed9e-4494-889f-ad4ab4806557',
+            Name: 'Victor',
+            Email: 'Victor.Von@gmail.com',
+            Password:
+                '$2b$10$wZihPwuKl1RekfOm3vaZKuRu5qR7pAy8ICwUBU/YcjkUJ/6SjzZ1y',
+            Is_Default_Password: false,
+            Role: 0
+        },
+        {
             ID: '50de10eb-7158-4c61-9594-0fbb3341a824',
             Name: 'Jeanne',
             Email: 'Jeanne_Ondricka@gmail.com',
