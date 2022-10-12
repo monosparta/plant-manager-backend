@@ -485,65 +485,6 @@ paths:
                 $ref: '#/components/schemas/GenericResponse'
               example:
                 message: "Permission denied"
-  /admin/addAdmin:
-    post:
-      tags:
-        - admin
-      summary: Add admin account
-      security:
-        - auth: []
-          authMethod: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                email:
-                  type: string
-      responses:
-        '200':
-          description: Add Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GenericResponse'
-              example:
-                message: "Add Success"
-        '400':
-          description: Invalid header
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GenericResponse'
-              example:
-                message: "Invalid header"
-        '401':
-          description: Invalid JWT token
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GenericResponse'
-              example:
-                message: "Invalid JWT token"
-        '403':
-          description: Permission denied
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GenericResponse'
-              example:
-                message: "Permission denied"
-        '409':
-          description: User already exist
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GenericResponse'
-              example:
-                message: "User already exist"
 
   '/admin/rent/{rentId}':
     put:
@@ -710,6 +651,178 @@ paths:
               example:
                 message: "Permission denied"
 
+  /admin/admin:
+    get:
+      tags:
+        - admin
+      summary: Get admin list
+      security:
+        - auth: []
+          authMethod: []
+      responses:
+        '200':
+          description: Query Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid header
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Invalid header"
+        '401':
+          description: Invalid JWT token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Invalid JWT token"
+        '403':
+          description: Permission denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Permission denied"
+
+    post:
+      tags:
+        - admin
+      summary: Add admin account
+      security:
+        - auth: []
+          authMethod: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+      responses:
+        '200':
+          description: Add Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Add Success"
+        '400':
+          description: Invalid header
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Invalid header"
+        '401':
+          description: Invalid JWT token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Invalid JWT token"
+        '403':
+          description: Permission denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Permission denied"
+        '409':
+          description: User already exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "User already exist"
+
+  '/admin/admin/{userId}':
+    delete:
+      tags:
+        - admin
+      summary: Delete admin
+      security:
+        - auth: []
+          authMethod: []
+      parameters:
+      - name: userId
+        in: path
+        description: ID of user
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Query Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Delete successful"
+        '400':
+          description: Invalid header
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Invalid header"
+        '401':
+          description: Invalid JWT token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Invalid JWT token"
+        '403':
+          description: Permission denied or could not delete this admin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              examples:
+                Permission Denied:
+                  value:
+                    message: "Permission denied"
+                Could not delete this admin:
+                  value:
+                    message: "Could not delete this admin"
+                You are deleting yourself!:
+                  value:
+                    message: "You are deleting yourself!"
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "User not found"
+
 # components
 components:
   securitySchemes:
@@ -841,6 +954,3 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Rent'
-
-
-
