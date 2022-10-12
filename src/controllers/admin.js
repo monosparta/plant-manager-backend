@@ -161,19 +161,9 @@ const listConfig = async (req, res) => {
     const updateHistory = (await getUpdateHistory()).map(config => ({
         deadline: config.Deadline,
         rentLimit: config.Rent_Limit,
-        updatedBy: config.User_ID,
+        updatedBy: config.User ? config.User.Name : 'SYSTEM',
         updatedAt: config.updatedAt
     }));
-
-    for (const history of updateHistory) {
-        console.log(history);
-        if (!history.updatedBy) {
-            history.updatedBy = 'SYSTEM';
-            continue;
-        }
-        const user = await getUserFromID(history.updatedBy);
-        history.updatedBy = user?.Name || 'SYSTEM';
-    }
 
     return res.status(200).json({
         message: 'Query success',
