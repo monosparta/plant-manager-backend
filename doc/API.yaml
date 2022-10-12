@@ -751,7 +751,7 @@ paths:
     put:
       tags:
         - admin
-      summary: Add admin account
+      summary: Modify config
       security:
         - auth: []
           authMethod: []
