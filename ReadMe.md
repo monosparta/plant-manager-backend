@@ -211,3 +211,8 @@ yarn start
 ```bash
 pm2 reload ecosystem.config.json
 ```
+8. 預設管理員帳號（登入後會跳轉修改密碼頁面）：
+```bash
+USERNAME: root@rental.planter
+PASSWORD: root
+```

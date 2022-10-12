@@ -1,5 +1,7 @@
 "use strict";
 
+const { Op } = require("sequelize");
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     /**
@@ -52,6 +54,15 @@ module.exports = {
             ID: '50de10eb-7158-4c61-9594-0fbb3341a824',
             Name: 'Jeanne',
             Email: 'Jeanne_Ondricka@gmail.com',
+            Password:
+                '$2b$10$36RdIQs6PgHtdyTqolzdCeV4o8FFZP5AO1KYMKzlUpYVXdOFRKDv2',
+            Is_Default_Password: false,
+            Role: 1
+        },
+        {
+            ID: '4a9cbf46-8b3f-47ed-a016-88f24ce6057c',
+            Name: 'Leopoldo',
+            Email: 'Leopoldo10@gmail.com',
             Password:
                 '$2b$10$36RdIQs6PgHtdyTqolzdCeV4o8FFZP5AO1KYMKzlUpYVXdOFRKDv2',
             Is_Default_Password: false,
@@ -117,7 +128,9 @@ module.exports = {
      */
     await queryInterface.bulkDelete("Rents", null, {});
     await queryInterface.bulkDelete("Containers", null, {});
-    await queryInterface.bulkDelete("Users", null, {});
+    await queryInterface.bulkDelete('Users', {
+        Email: {[Op.ne]: 'root@rental.planter'}
+    });
     await queryInterface.bulkDelete("Plants", null, {});
   },
 };
