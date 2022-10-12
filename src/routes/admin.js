@@ -1,5 +1,5 @@
 import express from 'express';
-import { createAdminAccount, deleteRent, getRentAmount, getRentedList, getWaitList, listConfig, markRentTaken, updateConfig, updateMemberRequest } from '../controllers/admin';
+import { createAdminAccount, deleteMember, deleteAdmin, deleteRent, getMembers, getAdmins, getRentAmount, getRentedList, getWaitList, listConfig, markRentTaken, updateConfig, updateMemberData, updateMemberRequest } from '../controllers/admin';
 const router = express.Router();
 
 import { verifyToken } from '../middlewares/authJWT';
@@ -15,9 +15,19 @@ router.put('/rent/:id', verifyToken, checkAdmin, markRentTaken);
 
 router.delete('/rent/:id', verifyToken, checkAdmin, deleteRent);
 
-router.post('/addAdmin', verifyToken, checkAdmin, createAdminAccount);
+router.get('/members', verifyToken, checkAdmin, getMembers);
 
-router.put('/member', verifyToken, checkAdmin, updateMemberRequest);
+router.put('/members', verifyToken, checkAdmin, updateMemberRequest);
+
+router.put('/member/:id', verifyToken, checkAdmin, updateMemberData);
+
+router.delete('/member/:id', verifyToken, checkAdmin, deleteMember);
+
+router.get('/admin', verifyToken, checkAdmin, getAdmins);
+
+router.post('/admin', verifyToken, checkAdmin, createAdminAccount);
+
+router.delete('/admin/:id', verifyToken, checkAdmin, deleteAdmin);
 
 router.get('/config', verifyToken, checkAdmin, listConfig);
 

@@ -58,4 +58,14 @@ describe('Test login with user', () => {
                 expect(res.body.message).toBe('Login success');
             });
     });
+
+    test('It should process the login request of default root account.', () => {
+        return request(app)
+            .post('/api/user/login')
+            .send({ email: 'root@rental.planter', password: 'root' })
+            .expect(200)
+            .then((res) => {
+                expect(res.body.message).toBe('Login success');
+            });
+    });
 });

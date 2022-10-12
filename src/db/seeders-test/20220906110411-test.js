@@ -1,5 +1,7 @@
 "use strict";
 
+const { Op } = require("sequelize");
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     /**
@@ -31,6 +33,24 @@ module.exports = {
             Role: 0
         },
         {
+            ID: 'ca61ef40-98a5-44d2-8347-b029798a917a',
+            Name: 'Triston',
+            Email: 'Triston.Rau@yahoo.com',
+            Password:
+                '$2b$10$wZihPwuKl1RekfOm3vaZKuRu5qR7pAy8ICwUBU/YcjkUJ/6SjzZ1y',
+            Is_Default_Password: false,
+            Role: 0
+        },
+        {
+            ID: '503ac323-3296-4a84-b3b7-2c3dfc5e2689',
+            Name: 'Alva',
+            Email: 'Alva9@gmail.com',
+            Password:
+                '$2b$10$wZihPwuKl1RekfOm3vaZKuRu5qR7pAy8ICwUBU/YcjkUJ/6SjzZ1y',
+            Is_Default_Password: false,
+            Role: 0
+        },
+        {
             ID: '0cd3e857-ed9e-4494-889f-ad4ab4806557',
             Name: 'Victor',
             Email: 'Victor.Von@gmail.com',
@@ -43,6 +63,15 @@ module.exports = {
             ID: '50de10eb-7158-4c61-9594-0fbb3341a824',
             Name: 'Jeanne',
             Email: 'Jeanne_Ondricka@gmail.com',
+            Password:
+                '$2b$10$36RdIQs6PgHtdyTqolzdCeV4o8FFZP5AO1KYMKzlUpYVXdOFRKDv2',
+            Is_Default_Password: false,
+            Role: 1
+        },
+        {
+            ID: '4a9cbf46-8b3f-47ed-a016-88f24ce6057c',
+            Name: 'Leopoldo',
+            Email: 'Leopoldo10@gmail.com',
             Password:
                 '$2b$10$36RdIQs6PgHtdyTqolzdCeV4o8FFZP5AO1KYMKzlUpYVXdOFRKDv2',
             Is_Default_Password: false,
@@ -109,7 +138,9 @@ module.exports = {
     await queryInterface.bulkDelete("Configs", null, {});
     await queryInterface.bulkDelete("Rents", null, {});
     await queryInterface.bulkDelete("Containers", null, {});
-    await queryInterface.bulkDelete("Users", null, {});
+    await queryInterface.bulkDelete('Users', {
+        Email: {[Op.ne]: 'root@rental.planter'}
+    });
     await queryInterface.bulkDelete("Plants", null, {});
   },
 };

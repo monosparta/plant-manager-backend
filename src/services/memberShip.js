@@ -22,4 +22,8 @@ updateMember();
 
 const queryMember = (email) => membership.find((x) => x.email === email);
 
-export { queryMember, updateMember };
+const queryMemberByUUID = (uuid) => membership.find((x) => x.uuid === uuid);
+
+const memberList = () => membership.map(x => ({ uuid: x.uuid, name: x.name, email: x.email }));
+
+export { queryMember, updateMember, memberList, queryMemberByUUID };

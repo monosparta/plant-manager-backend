@@ -3,14 +3,14 @@ import { deletePlantByID, getPlant } from '../services/plant';
 import { deleteRentById, getAllRentData, getRentById, getWaitingRentData, markContainerTaken } from '../services/rent';
 import { unlinkSync, existsSync } from 'fs';
 import { join } from 'path';
-import { createUser, getUserFromEmail, getUserFromID } from '../services/user';
+import { createUser, destroyUserByID, getUserFromEmail, getUserFromID, getAdminList, getUserList, updateUser } from '../services/user';
 import { createPassword } from '../services/randomPassword';
 import { randomUUID } from 'crypto';
 import { autoAssignContainer } from './rent';
 import { validateEmail } from '../services/mailSender';
 import { roles } from '../middlewares/permission';
 import { sendAdminRegisterEmail } from '../services/mailTemplate';
-import { updateMember } from '../services/memberShip';
+import { memberList, queryMemberByUUID, updateMember } from '../services/memberShip';
 import { getDeadline, getRentLimit, getUpdateHistory, update } from '../services/config';
 
 const getRentedList = async (req, res) => {
@@ -45,6 +45,52 @@ const updateMemberRequest = async (req, res) => {
 
     return res.status(200).json({
         message: 'Update successful.'
+    });
+};
+
+const getAdmins = async (req, res) => {
+    const adminList = await getAdminList();
+
+    return res.status(200).json({
+        message: 'Query Success',
+        data: adminList.map(item => {
+            return {
+                id: item.ID,
+                name: item.Name,
+                email: item.Email,
+                isDefaultPassword: item.Is_Default_Password,
+                role: item.Role
+            };
+        })
+    });
+};
+
+const deleteAdmin = async (req, res) => {
+    const own = await getUserFromID(req.userId);
+    const user = await getUserFromID(req.params.id);
+
+    if (!user || user.Role !== roles.admin) {
+        return res.status(404).json({
+            message: 'User not found'
+        });
+    }
+
+    if (user.ID === own.ID) {
+        return res.status(403).json({
+            message: 'You are deleting yourself!'
+        });
+    }
+
+    if (user.Email === 'root@rental.planter') {
+        return res.status(403).json({
+            message: 'Could not delete this admin'
+        });
+    }
+
+    await destroyUserByID(user.ID);
+
+    return res.status(200).json({
+        message: 'Delete successful'
     });
 };
 
@@ -135,7 +181,86 @@ const createAdminAccount = async (req, res) => {
     sendAdminRegisterEmail(user.Email, assigner.Name, user.Name, password);
 
     return res.status(200).json({
-        message: 'Registration success'
+        message: 'Add success'
+    });
+};
+
+const genMemberList = async () => {
+    const registeredMembers = [];
+    let cachedMembers = memberList();
+    const notMemberAccounts = [];
+
+    const users = await getUserList();
+
+    for (const user of users) {
+        const member = cachedMembers.find(x => x.uuid === user.ID);
+        const registered = {
+            id: user.ID,
+            name: user.Name,
+            email: user.Email
+        };
+        if (member) {
+            if (member.name !== user.Name) {
+                registered.updateName = member.name;
+            }
+
+            if (member.email !== user.Email) {
+                registered.updateEmail = member.email;
+            }
+
+            cachedMembers = cachedMembers.filter(x => x.uuid !== member.uuid);
+            registeredMembers.push(registered);
+        } else {
+            notMemberAccounts.push(registered);
+        }
+    }
+
+    return { registeredMembers, cachedMembers, notMemberAccounts };
+};
+
+const getMembers = async (req, res) => {
+    return res.status(200).json({
+        message: 'Query success',
+        data: await genMemberList()
+    });
+};
+
+const updateMemberData = async (req, res) => {
+    const user = await getUserFromID(req.params.id);
+
+    if (!user || user.Role !== roles.user) {
+        return res.status(404).json({
+            message: 'User not found'
+        });
+    }
+
+    const member = queryMemberByUUID(user.ID);
+
+    if (!member) {
+        return res.status(404).json({
+            message: 'Member not found'
+        });
+    }
+
+    await updateUser(user.ID, member.name, member.email);
+
+    return res.status(200).json({
+        message: 'Update successful'
+    });
+};
+
+const deleteMember = async (req, res) => {
+    const user = await getUserFromID(req.params.id);
+
+    if (!user || user.Role !== roles.user) {
+        return res.status(404).json({
+            message: 'User not found'
+        });
+    }
+    await destroyUserByID(user.ID);
+
+    return res.status(200).json({
+        message: 'Delete successful'
     });
 };
 
@@ -186,5 +311,10 @@ export {
     createAdminAccount,
     updateMemberRequest,
     updateConfig,
-    listConfig
+    listConfig,
+    deleteMember,
+    getMembers,
+    updateMemberData,
+    getAdmins,
+    deleteAdmin
 };

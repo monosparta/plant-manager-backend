@@ -115,6 +115,11 @@ describe('Test rent wait list', () => {
 });
 
 describe('Test user filling rent form', () => {
+    let plantId;
+    beforeAll(() => {
+        plantId = readLatestRentId('Eula_Ritchie@hotmail.com');
+    });
+
     test('It should block plant info when no body is provided.', () => {
         return request(app)
             .post('/api/rent/plantInfo')
@@ -131,7 +136,7 @@ describe('Test user filling rent form', () => {
             .post('/api/rent/plantInfo')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
-            .field('rent', readLatestRentId('Eula_Ritchie@hotmail.com'))
+            .field('rent', plantId)
             .field('name', 'test')
             .field('intro', 'test\ntest')
             .field('nickname', 'test-nick')
@@ -171,12 +176,30 @@ describe('Test user filling rent form', () => {
             });
     });
 
+    test('It should block plant info when requested rent is invalid (ex: not owned).', () => {
+        return request(app)
+            .post('/api/rent/plantInfo')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .field('rent', 1)
+            .field('name', 'test')
+            .field('intro', 'test\ntest')
+            .field('nickname', 'test-nick')
+            .field('minHumid', 20)
+            .attach('image', `${__dirname}/../files/image.jpg`)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('Requested rent not found');
+            });
+    });
+
+
     test('It should block invalid image.', () => {
         return request(app)
             .post('/api/rent/plantInfo')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
-            .field('rent', readLatestRentId('Eula_Ritchie@hotmail.com'))
+            .field('rent', plantId)
             .field('name', 'test')
             .field('intro', 'test\ntest')
             .field('nickname', 'test-nick')
@@ -190,7 +213,7 @@ describe('Test user filling rent form', () => {
             .post('/api/rent/plantInfo')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
-            .field('rent', readLatestRentId('Eula_Ritchie@hotmail.com'))
+            .field('rent', plantId)
             .field('name', 'test')
             .field('intro', 'test\ntest')
             .field('nickname', 'test-nick')
@@ -204,7 +227,7 @@ describe('Test user filling rent form', () => {
             .post('/api/rent/plantInfo')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
-            .field('rent', readLatestRentId('Eula_Ritchie@hotmail.com'))
+            .field('rent', plantId)
             .field('name', 'test')
             .field('intro', 'test\ntest')
             .field('nickname', 'test-nick')
@@ -221,7 +244,7 @@ describe('Test user filling rent form', () => {
             .post('/api/rent/plantInfo')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
-            .field('rent', readLatestRentId('Eula_Ritchie@hotmail.com'))
+            .field('rent', plantId)
             .field('name', 'test')
             .field('intro', 'test\ntest')
             .field('nickname', 'test-nick')
@@ -230,6 +253,153 @@ describe('Test user filling rent form', () => {
             .expect(409)
             .then((res) => {
                 expect(res.body.message).toBe('Plant already exist');
+            });
+    });
+});
+
+describe('Test user modify rent', () => {
+    let plantId;
+    beforeAll(() => {
+        plantId = readLatestRentId('Eula_Ritchie@hotmail.com');
+    });
+
+    test('It should block modify plant info when no body is provided.', () => {
+        return request(app)
+            .put(`/api/rent/plantInfo/${plantId}`)
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(400)
+            .then((res) => {
+                expect(res.body.message).toBe('Invalid body');
+            });
+    });
+
+    test('It should block modify plant info when body is incomplete.', () => {
+        return request(app)
+            .put(`/api/rent/plantInfo/${plantId}`)
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .field('name', 'test')
+            .field('nickname', 'test-nick')
+            .expect(400)
+            .then((res) => {
+                expect(res.body.message).toBe('Invalid body');
+            });
+    });
+
+    test('It should block modify plant info when requested rent is not found. (1/2)', () => {
+        return request(app)
+            .put('/api/rent/plantInfo/0')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .field('name', 'test')
+            .field('intro', 'test\ntest')
+            .field('nickname', 'test-nick')
+            .field('minHumid', 20)
+            .attach('image', `${__dirname}/../files/image.jpg`)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('Requested rent not found');
+            });
+    });
+
+    test('It should block modify plant info when requested rent is not found. (2/2)', () => {
+        return request(app)
+            .put('/api/rent/plantInfo/0')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .field('name', 'test')
+            .field('intro', 'test\ntest')
+            .field('nickname', 'test-nick')
+            .field('minHumid', 20)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('Requested rent not found');
+            });
+    });
+
+    test('It should block modify plant info when requested rent is invalid (ex: not owned).', () => {
+        return request(app)
+            .put('/api/rent/plantInfo/1')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .field('name', 'test')
+            .field('intro', 'test\ntest')
+            .field('nickname', 'test-nick')
+            .field('minHumid', 20)
+            .attach('image', `${__dirname}/../files/image.jpg`)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('Requested rent not found');
+            });
+    });
+
+    test('It should block invalid image.', () => {
+        return request(app)
+            .put(`/api/rent/plantInfo/${plantId}`)
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .field('name', 'test')
+            .field('intro', 'test\ntest')
+            .field('nickname', 'test-nick')
+            .field('minHumid', 20)
+            .attach('image', `${__dirname}/../files/invalidImage.7z`)
+            .expect(400);
+    });
+
+    test('It should block large image.', () => {
+        return request(app)
+            .put(`/api/rent/plantInfo/${plantId}`)
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .field('name', 'test')
+            .field('intro', 'test\ntest')
+            .field('nickname', 'test-nick')
+            .field('minHumid', 20)
+            .attach('image', `${__dirname}/../files/largeImage.jpg`)
+            .expect(400);
+    });
+
+    test('It should block modify plant info when only file is provided.', () => {
+        return request(app)
+            .put(`/api/rent/plantInfo/${plantId}`)
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .attach('image', `${__dirname}/../files/image.jpg`)
+            .expect(400)
+            .then((res) => {
+                expect(res.body.message).toBe('Invalid body');
+            });
+    });
+
+    test('It should proceed modify plant info when no file is provided.', () => {
+        return request(app)
+            .put(`/api/rent/plantInfo/${plantId}`)
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .field('name', 'test')
+            .field('intro', 'test\ntest')
+            .field('nickname', 'test-nick')
+            .field('minHumid', 20)
+            .expect(200)
+            .then((res) => {
+                expect(res.body.message).toBe('Update successful');
+            });
+    });
+
+    test('It should proceed modify plant info.', () => {
+        return request(app)
+            .put(`/api/rent/plantInfo/${plantId}`)
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .field('name', 'test')
+            .field('intro', 'test\ntest')
+            .field('nickname', 'test-nick')
+            .field('minHumid', 20)
+            .attach('image', `${__dirname}/../files/image.jpg`)
+            .expect(200)
+            .then((res) => {
+                expect(res.body.message).toBe('Update successful');
             });
     });
 });
