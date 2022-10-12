@@ -1190,7 +1190,7 @@ Status Code **200**
 
 ```json
 {
-  "message": "Rent not found"
+  "message": "User not found"
 }
 ```
 
