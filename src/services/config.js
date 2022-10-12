@@ -8,10 +8,7 @@ const config = { deadline: 5, rentLimit: 1 };
 const initConfig = () =>
     db.Config.findOne({ order: [['updatedAt', 'DESC']] }).then((value) => {
         if (!value) {
-            db.Config.create({
-                Deadline: config.deadline,
-                Rent_Limit: config.rentLimit
-            });
+            update(config.deadline, config.rentLimit);
             return;
         }
 
