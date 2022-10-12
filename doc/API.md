@@ -425,6 +425,7 @@
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Registration successful|Inline|
 |400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid header|[GenericResponse](#schemagenericresponse)|
 |401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Invalid JWT token|[GenericResponse](#schemagenericresponse)|
+|409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Too many rents|[GenericResponse](#schemagenericresponse)|
 
 #### 200 回應參數
 
@@ -457,6 +458,14 @@
 ```json
 {
   "message": "Invalid JWT token"
+}
+```
+
+> 409 Response
+
+```json
+{
+  "message": "Too many rents"
 }
 ```
 

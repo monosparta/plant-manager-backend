@@ -254,6 +254,14 @@ paths:
                 $ref: '#/components/schemas/GenericResponse'
               example:
                 message: "Invalid JWT token"
+        '409':
+          description: Too many rents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+              example:
+                message: "Too many rents"
   /rent/plantInfo:
     post:
       tags:
