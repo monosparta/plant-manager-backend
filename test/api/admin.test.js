@@ -170,15 +170,104 @@ describe('Test add admin', () => {
                 expect(res.body.message).toBe('Add success');
             });
     });
+});
+
+describe('Test member manage', () => {
+    test('It should proceed admin get member list request sent by admin.', () => {
+        return request(app)
+            .get('/api/admin/members')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(200)
+            .then((res) => {
+                expect(res.body.message).toBe('Query success');
+            });
+    });
 
     test('It should proceed admin update member list request sent by admin.', () => {
         return request(app)
-            .put('/api/admin/member')
+            .put('/api/admin/members')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
             .expect(200)
             .then((res) => {
                 expect(res.body.message).toBe('Update successful.');
+            });
+    });
+});
+
+describe('Test member update', () => {
+    test('It should block update admin from this method.', () => {
+        return request(app)
+            .put('/api/admin/member/50de10eb-7158-4c61-9594-0fbb3341a824')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('User not found');
+            });
+    });
+    test('It should block update member that does not exist.', () => {
+        return request(app)
+            .put('/api/admin/member/eafaca48-1512-48f5-abb9-e9d912bba011')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('User not found');
+            });
+    });
+    test('It should block update member that is no longer member.', () => {
+        return request(app)
+            .put('/api/admin/member/ca61ef40-98a5-44d2-8347-b029798a917a')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('Member not found');
+            });
+    });
+    test('It should proceed update member request.', () => {
+        return request(app)
+            .put('/api/admin/member/503ac323-3296-4a84-b3b7-2c3dfc5e2689')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(200)
+            .then((res) => {
+                expect(res.body.message).toBe('Update successful');
+            });
+    });
+});
+
+describe('Test member delete', () => {
+    test('It should block delete admin from this method.', () => {
+        return request(app)
+            .delete('/api/admin/member/50de10eb-7158-4c61-9594-0fbb3341a824')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('User not found');
+            });
+    });
+    test('It should block delete member that does not exist.', () => {
+        return request(app)
+            .delete('/api/admin/member/eafaca48-1512-48f5-abb9-e9d912bba011')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('User not found');
+            });
+    });
+    test('It should proceed delete member request.', () => {
+        return request(app)
+            .delete('/api/admin/member/503ac323-3296-4a84-b3b7-2c3dfc5e2689')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(200)
+            .then((res) => {
+                expect(res.body.message).toBe('Delete successful');
             });
     });
 });
@@ -222,7 +311,11 @@ describe('Test get and delete admin', () => {
 
     test('It should block delete admin that\'s root.', () => {
         return request(app)
-            .delete(`/api/admin/admin/${adminList.find(x => x.email === 'root@rental.planter').id}`)
+            .delete(
+                `/api/admin/admin/${
+                    adminList.find((x) => x.email === 'root@rental.planter').id
+                }`
+            )
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
             .expect(403)

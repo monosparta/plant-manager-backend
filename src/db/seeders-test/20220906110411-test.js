@@ -33,6 +33,24 @@ module.exports = {
             Role: 0
         },
         {
+            ID: 'ca61ef40-98a5-44d2-8347-b029798a917a',
+            Name: 'Triston',
+            Email: 'Triston.Rau@yahoo.com',
+            Password:
+                '$2b$10$wZihPwuKl1RekfOm3vaZKuRu5qR7pAy8ICwUBU/YcjkUJ/6SjzZ1y',
+            Is_Default_Password: false,
+            Role: 0
+        },
+        {
+            ID: '503ac323-3296-4a84-b3b7-2c3dfc5e2689',
+            Name: 'Alva',
+            Email: 'Alva9@gmail.com',
+            Password:
+                '$2b$10$wZihPwuKl1RekfOm3vaZKuRu5qR7pAy8ICwUBU/YcjkUJ/6SjzZ1y',
+            Is_Default_Password: false,
+            Role: 0
+        },
+        {
             ID: '50de10eb-7158-4c61-9594-0fbb3341a824',
             Name: 'Jeanne',
             Email: 'Jeanne_Ondricka@gmail.com',

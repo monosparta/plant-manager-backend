@@ -36,7 +36,10 @@
   - [GET /admin/rentedAmount](#get-admin-rented-amount)
   - [PUT /admin/rent/{rentId}](#put-admin-rent)
   - [DELETE /admin/rent/{rentId}](#delete-admin-rent)
-  - [PUT /admin/member](#put-admin-member)
+  - [GET /admin/members](#get-admin-members)
+  - [PUT /admin/members](#put-admin-members)
+  - [PUT /admin/member/{userId}](#put-admin-member)
+  - [DELETE /admin/member/{userId}](#delete-admin-member)
   - [GET /admin/admin](#get-admin-admin)
   - [POST /admin/admin](#post-admin-admin)
   - [DELETE /admin/admin/{userId}](#delete-admin-admin)
@@ -914,9 +917,102 @@ Status Code **200**
 ```
 
 ---
-<span id="put-admin-member"></span>
+<span id="get-admin-members"></span>
 
-## `PUT /admin/member`
+## `GET /admin/members`
+*Get cached and registered member list*
+
+> 需要 [Header](#header)
+
+### 回應
+
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Query success|Inline|
+|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid header|[GenericResponse](#schemagenericresponse)|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Invalid JWT token|[GenericResponse](#schemagenericresponse)|
+|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Permission denied|[GenericResponse](#schemagenericresponse)|
+#### 回應參數
+
+Status Code **200**
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|» message|string|false|none|none|
+|» data|object|false|none|none|
+|»» registeredMembers|[[Member](#schemamember)]|false|none|none|
+|»»» id|string(uuid)|false|none|none|
+|»»» name|string|false|none|none|
+|»»» updatedName|string|false|none|none|
+|»»» email|string|false|none|none|
+|»»» updatedEmail|string|false|none|none|
+|»» cachedMembers|[[Member](#schemamember)]|false|none|none|
+|»» notMemberAccounts|[[Member](#schemamember)]|false|none|none|
+
+#### 範例回應：
+
+> 200 Response
+
+```json
+{
+  "message": "string",
+  "data": {
+    "registeredMembers": [
+      {
+        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+        "name": "string",
+        "email": "string",
+        "updatedEmail": "string"
+      }
+    ],
+    "cachedMembers": [
+      {
+        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+        "name": "string",
+        "email": "string",
+        "updatedEmail": "string"
+      }
+    ],
+    "notMemberAccounts": [
+      {
+        "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+        "name": "string",
+        "email": "string",
+        "updatedEmail": "string"
+      }
+    ]
+  }
+}
+```
+
+> 400 Response
+
+```json
+{
+  "message": "Invalid header"
+}
+```
+
+> 401 Response
+
+```json
+{
+  "message": "Invalid JWT token"
+}
+```
+
+> 403 Response
+
+```json
+{
+  "message": "Permission denied"
+}
+```
+---
+<span id="put-admin-members"></span>
+
+## `PUT /admin/members`
 *Update member list from member api*
 
 > 需要 [Header](#header)
@@ -963,6 +1059,143 @@ Status Code **200**
   "message": "Permission denied"
 }
 ```
+---
+<span id="put-admin-member"></span>
+
+## `PUT /admin/member/{userId}`
+*Update member from member API*
+
+> 需要 [Header](#header)
+
+#### 參數
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|userId|path|string(uuid)|true|ID of user|
+
+### 回應
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Update successful|[GenericResponse](#schemagenericresponse)|
+|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid header|[GenericResponse](#schemagenericresponse)|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Invalid JWT token|[GenericResponse](#schemagenericresponse)|
+|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Permission denied|[GenericResponse](#schemagenericresponse)|
+|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|User not found|[GenericResponse](#schemagenericresponse)|
+
+#### 範例回應：
+
+> 200 Response
+
+```json
+{
+  "message": "Update successful"
+}
+```
+
+> 400 Response
+
+```json
+{
+  "message": "Invalid header"
+}
+```
+
+> 401 Response
+
+```json
+{
+  "message": "Invalid JWT token"
+}
+```
+
+> 403 Response
+
+```json
+{
+  "message": "Permission denied"
+}
+```
+
+> 404 Response
+
+> User not found
+```json
+{
+  "message": "User not found"
+}
+```
+> Member not found
+```json
+{
+  "message": "Member not found"
+}
+```
+---
+<span id="delete-admin-member"></span>
+
+## `DELETE /admin/member/{userId}`
+*Delete member by id*
+
+> 需要 [Header](#header)
+
+#### 參數
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|userId|path|string(uuid)|true|ID of user|
+
+### 回應
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Delete successful|[GenericResponse](#schemagenericresponse)|
+|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid header|[GenericResponse](#schemagenericresponse)|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Invalid JWT token|[GenericResponse](#schemagenericresponse)|
+|403|[Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)|Permission denied|[GenericResponse](#schemagenericresponse)|
+|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|User not found|[GenericResponse](#schemagenericresponse)|
+
+#### 範例回應：
+
+> 200 Response
+
+```json
+{
+  "message": "Delete successful"
+}
+```
+
+> 400 Response
+
+```json
+{
+  "message": "Invalid header"
+}
+```
+
+> 401 Response
+
+```json
+{
+  "message": "Invalid JWT token"
+}
+```
+
+> 403 Response
+
+```json
+{
+  "message": "Permission denied"
+}
+```
+
+> 404 Response
+
+```json
+{
+  "message": "User not found"
+}
+```
 
 ---
 <span id="get-admin-admin"></span>
@@ -1004,7 +1237,7 @@ Status Code **200**
       "name": "string",
       "email": "string",
       "isDefaultPassword": true,
-    "role": 0
+      "role": 0
     }
   ]
 }
@@ -1223,6 +1456,34 @@ Status Code **200**
 |email|string|false|none|none|
 |isDefaultPassword|boolean|false|none|none|
 |role|integer|false|none|none|
+
+<h2 id="tocS_Member">Member</h2>
+<!-- backwards compatibility -->
+<a id="schemamember"></a>
+<a id="schema_Member"></a>
+<a id="tocSmember"></a>
+<a id="tocsmember"></a>
+
+```json
+{
+  "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+  "name": "string",
+  "updatedName": "string",
+  "email": "string",
+  "updatedEmail": "string"
+}
+
+```
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|id|string(uuid)|false|none|none|
+|name|string|false|none|none|
+|updatedName|string|false|none|none|
+|email|string|false|none|none|
+|updatedEmail|string|false|none|none|
 
 <h2 id="tocS_Rent">Rent</h2>
 <!-- backwards compatibility -->
