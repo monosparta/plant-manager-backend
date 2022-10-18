@@ -8,7 +8,7 @@ const invalidToken =
 beforeAll(async () => {
     const res = await request(app)
         .post('/api/user/login')
-        .send({ email: 'Lori.Crist@gmail.com', password: 'demo' });
+        .send({ email: 'Eula_Ritchie@hotmail.com', password: 'demo' });
     token = res.body.token;
 });
 
