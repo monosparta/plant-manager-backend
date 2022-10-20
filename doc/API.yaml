@@ -1028,7 +1028,7 @@ paths:
           format: uuid
       responses:
         '200':
-          description: Query Success
+          description: Delete Success
           content:
             application/json:
               schema:
