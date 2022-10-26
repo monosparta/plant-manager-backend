@@ -102,7 +102,7 @@ describe('Test take rent', () => {
 describe('Test add admin', () => {
     test('It should block admin add admin request when no body is provided.', () => {
         return request(app)
-            .post('/api/admin/addAdmin')
+            .post('/api/admin/admin')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
             .expect(400)
@@ -113,7 +113,7 @@ describe('Test add admin', () => {
 
     test('It should block admin add admin request when body is incomplete. (1/2)', () => {
         return request(app)
-            .post('/api/admin/addAdmin')
+            .post('/api/admin/admin')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
             .send({ email: 'Lori.Crist@gmail.com' })
@@ -125,7 +125,7 @@ describe('Test add admin', () => {
 
     test('It should block admin add admin request when body is incomplete. (2/2)', () => {
         return request(app)
-            .post('/api/admin/addAdmin')
+            .post('/api/admin/admin')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
             .send({ name: 'Lori' })
@@ -137,7 +137,7 @@ describe('Test add admin', () => {
 
     test('It should block admin add admin request when email is invalid.', () => {
         return request(app)
-            .post('/api/admin/addAdmin')
+            .post('/api/admin/admin')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
             .send({ name: 'Lori', email: 'not-email' })
@@ -149,7 +149,7 @@ describe('Test add admin', () => {
 
     test('It should block admin add admin request when user is already in user database.', () => {
         return request(app)
-            .post('/api/admin/addAdmin')
+            .post('/api/admin/admin')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
             .send({ name: 'Lori', email: 'Lori.Crist@gmail.com' })
@@ -161,24 +161,177 @@ describe('Test add admin', () => {
 
     test('It should proceed admin delete rent request sent by admin.', () => {
         return request(app)
-            .post('/api/admin/addAdmin')
+            .post('/api/admin/admin')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
             .send({ name: 'Test', email: process.env.EMAIL_ACCOUNT })
             .expect(200)
             .then((res) => {
-                expect(res.body.message).toBe('Registration success');
+                expect(res.body.message).toBe('Add success');
+            });
+    });
+});
+
+describe('Test member manage', () => {
+    test('It should proceed admin get member list request sent by admin.', () => {
+        return request(app)
+            .get('/api/admin/members')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(200)
+            .then((res) => {
+                expect(res.body.message).toBe('Query success');
             });
     });
 
     test('It should proceed admin update member list request sent by admin.', () => {
         return request(app)
-            .put('/api/admin/member')
+            .put('/api/admin/members')
             .set('Auth-Method', 'JWT')
             .set('Auth', token)
             .expect(200)
             .then((res) => {
                 expect(res.body.message).toBe('Update successful.');
+            });
+    });
+});
+
+describe('Test member update', () => {
+    test('It should block update admin from this method.', () => {
+        return request(app)
+            .put('/api/admin/member/50de10eb-7158-4c61-9594-0fbb3341a824')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('User not found');
+            });
+    });
+    test('It should block update member that does not exist.', () => {
+        return request(app)
+            .put('/api/admin/member/eafaca48-1512-48f5-abb9-e9d912bba011')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('User not found');
+            });
+    });
+    test('It should block update member that is no longer member.', () => {
+        return request(app)
+            .put('/api/admin/member/ca61ef40-98a5-44d2-8347-b029798a917a')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('Member not found');
+            });
+    });
+    test('It should proceed update member request.', () => {
+        return request(app)
+            .put('/api/admin/member/503ac323-3296-4a84-b3b7-2c3dfc5e2689')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(200)
+            .then((res) => {
+                expect(res.body.message).toBe('Update successful');
+            });
+    });
+});
+
+describe('Test member delete', () => {
+    test('It should block delete admin from this method.', () => {
+        return request(app)
+            .delete('/api/admin/member/50de10eb-7158-4c61-9594-0fbb3341a824')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('User not found');
+            });
+    });
+    test('It should block delete member that does not exist.', () => {
+        return request(app)
+            .delete('/api/admin/member/eafaca48-1512-48f5-abb9-e9d912bba011')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('User not found');
+            });
+    });
+    test('It should proceed delete member request.', () => {
+        return request(app)
+            .delete('/api/admin/member/503ac323-3296-4a84-b3b7-2c3dfc5e2689')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(200)
+            .then((res) => {
+                expect(res.body.message).toBe('Delete successful');
+            });
+    });
+});
+
+describe('Test get and delete admin', () => {
+    let adminList = [];
+
+    test('It should return a list of admins.', () => {
+        return request(app)
+            .get('/api/admin/admin')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(200)
+            .then((res) => {
+                adminList = res.body.data;
+                expect(res.body.message).toBe('Query Success');
+            });
+    });
+
+    test('It should block delete admin that\'s not exist.', () => {
+        return request(app)
+            .delete('/api/admin/admin/997939d1-564b-4496-bf70-d2fe30f15c55')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(404)
+            .then((res) => {
+                expect(res.body.message).toBe('User not found');
+            });
+    });
+
+    test('It should block delete admin that\'s self account.', () => {
+        return request(app)
+            .delete('/api/admin/admin/50de10eb-7158-4c61-9594-0fbb3341a824')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(403)
+            .then((res) => {
+                expect(res.body.message).toBe('You are deleting yourself!');
+            });
+    });
+
+    test('It should block delete admin that\'s root.', () => {
+        return request(app)
+            .delete(
+                `/api/admin/admin/${
+                    adminList.find((x) => x.email === 'root@rental.planter').id
+                }`
+            )
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(403)
+            .then((res) => {
+                expect(res.body.message).toBe('Could not delete this admin');
+            });
+    });
+
+    test('It should procees admin delete.', () => {
+        return request(app)
+            .delete('/api/admin/admin/4a9cbf46-8b3f-47ed-a016-88f24ce6057c')
+            .set('Auth-Method', 'JWT')
+            .set('Auth', token)
+            .expect(200)
+            .then((res) => {
+                expect(res.body.message).toBe('Delete successful');
             });
     });
 });
