@@ -54,6 +54,10 @@ jobs:
         run: |
           cd ${{ secrets.DEPLOY_PATH }}
           yarn
+      - name: Update database
+        run : |
+          cd ${{ secrets.DEPLOY_PATH }}
+          yarn migrate:up
       - name: Build
         run: |
           cd ${{ secrets.DEPLOY_PATH }}
