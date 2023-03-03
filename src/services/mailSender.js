@@ -31,7 +31,7 @@ const sendMail = (to, subject, mailBody) => {
             const now2 = now.toISOString().replace(":","-");
             // writeFileSync(`./fakeInbox/test.html`, mailBody);
             // writeFileSync(`./fakeInbox/${to}-${subject}.html`, mailBody);
-            writeFileSync(`./fakeInbox/${now.toISOString()}-${to}-${subject}.html`, mailBody);
+            writeFileSync(`./fakeInbox/${to}-${subject}.html`, mailBody);
 
             return;
         }
