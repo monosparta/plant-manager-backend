@@ -28,7 +28,7 @@ const sendMail = (to, subject, mailBody) => {
         );
         if (!mailWhiteList.includes(to)) {
             const now = new Date();
-            const now2 = now.toISOString().replace(":","-");
+            // const now2 = now.toISOString().replace(":","-");
             // writeFileSync(`./fakeInbox/test.html`, mailBody);
             // writeFileSync(`./fakeInbox/${to}-${subject}.html`, mailBody);
             writeFileSync(`./fakeInbox/${to}-${subject}.html`, mailBody);
