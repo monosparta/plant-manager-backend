@@ -29,4 +29,6 @@ router.post('/admin', verifyToken, checkAdmin, createAdminAccount);
 
 router.delete('/admin/:id', verifyToken, checkAdmin, deleteAdmin);
 
+router.get('/admin/adminList', verifyToken, checkAdmin, getAdmins);
+
 export default router;

@@ -27,8 +27,8 @@ const sendMail = (to, subject, mailBody) => {
             readFileSync('./mailWhitelist.json', { encoding: 'utf-8' })
         );
         if (!mailWhiteList.includes(to)) {
-            const now = new Date();
-            writeFileSync(`./fakeInbox/${now.toISOString()}-${to}-${subject}.html`, mailBody);
+            writeFileSync(`./fakeInbox/${to}-${subject}.html`, mailBody);
+
             return;
         }
     }
