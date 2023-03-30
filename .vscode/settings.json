@@ -1,0 +1,8 @@
+{
+    "conventionalCommits.scopes": [
+        "Express",
+        "Database",
+        "websocket"
+    ],
+    "jest.jestCommandLine": "yarn seed:test:undo; yarn seed:test:up; yarn test:run",
+}
