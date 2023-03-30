@@ -31,7 +31,8 @@ router.delete('/admin/:id', verifyToken, checkAdmin, deleteAdmin);
 
 router.get('/admin/adminList', verifyToken, checkAdmin, getAdmins);
 
-router.post('/admin/adminList', verifyToken, checkAdmin, createAdminAccount);
+// 已經有了，路徑是 POST /api/admin/admin
+// router.post('/admin/adminList', verifyToken, checkAdmin, createAdminAccount);
 
 
 export default router;
